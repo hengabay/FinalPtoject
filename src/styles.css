@@ -1,1 +1,148 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,300;1,900&display=swap');
+
+html{
+    font-size: 62.5%;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}   
+
+body{
+    position: relative;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #777;
+    box-sizing: border-box;
+
+}
+
+.card{
+    position: relative;
+    height: 100%; 
+}
+
+.header{
+    height: 30vh;
+    
+    background-image:linear-gradient(to right bottom,rgb(119, 119, 119),rgba(119, 119, 119, 0.39)),url(../src/assets/img/cloudonix-name.png) ;
+    background-size: cover;
+    background-position: top;
+    position: relative;
+}
+
+.logo-box{
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+}
+
+.logo{
+    height: 4.5rem;
+    
+}
+
+
+
+.heading-primary{
+    color: white;
+    text-transform: uppercase;
+}
+
+.text-title{
+    display: block;
+    font-size: 4.5rem;
+    font-weight: 400;
+    letter-spacing: 1.8rem;
+    animation-name: moveInleft;
+    animation-duration:1s ;
+    animation-timing-function: ease-out;
+}
+
+.text-sub-title{
+    display: block;
+    margin: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1.4rem;
+    animation-name: moveInright;
+    animation-duration:1s ;
+    animation-timing-function: ease-out;
+}
+
+.text-box{
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%,-50%);
+
+}
+
+@keyframes moveInleft {
+    0%{
+        opacity: 0;
+        transform: translateX(-10rem);
+    }
+
+    80%{
+        transform: translateX(2rem);
+    }
+    100%{
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes moveInright {
+    0%{
+        opacity: 0;
+        transform: translateX(10rem);
+    }
+
+    80%{
+        transform: translateX(-2rem);
+    }
+    100%{
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+.add-app{
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    transition: all .2s;
+}
+
+.add-app:hover{
+    transform: translateY(-0.3rem);
+}
+
+.add-app:active{
+    transform: translateY(-0.1rem);
+
+}
+table{
+    width: 100%;
+}
+
+.applications{
+    width: 50%;
+    margin: 1rem;
+}
+.spinner{
+    z-index: 2;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: inline;
+}
+mat-spinner{
+    height: 80rem;
+}
+
+
