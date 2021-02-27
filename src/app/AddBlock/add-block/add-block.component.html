@@ -1,0 +1,38 @@
+<h3 mat-dialog-title>Create Application!</h3>
+<form [formGroup]="AddBlockForm" (ngSubmit)="onSubmit()" >
+
+  <mat-dialog-content >
+    <p>
+        <mat-form-field >
+          <mat-label>Block name</mat-label>
+          <input formControlName="blockname" matInput  placeholder="Name">
+          <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+          <mat-hint>Hint</mat-hint>
+          <mat-error *ngIf="AddBlockForm.get('appname')">The name is invalid</mat-error>
+        </mat-form-field>
+      </p>
+      
+      <p>
+        <mat-form-field>
+            <mat-label>Runtime</mat-label>
+            <mat-select formControlName="runtime">
+                <div *ngFor="let runtime of runtimes">
+                    <mat-option value={{runtime}}>{{runtime}}</mat-option>
+                </div>
+            </mat-select>          
+          </mat-form-field>
+      </p> 
+      <mat-form-field >
+        <mat-label>Write your code</mat-label>
+        <textarea formControlName="code" matInput></textarea>
+      </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button  mat-dialog-close  type="submit" mat-button color="primary">Add</button>
+    <button (click)="AddBlockForm.reset()"  type="button" mat-button color="primary">Clear</button>
+  </mat-dialog-actions>
+
+</form>
+
+
+

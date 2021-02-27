@@ -130,8 +130,7 @@ table{
 }
 
 .applications{
-    width: 50%;
-    margin: 1rem;
+    margin:3rem;
 }
 .spinner{
     z-index: 2;
@@ -143,6 +142,9 @@ table{
 }
 mat-spinner{
     height: 80rem;
+}
+.divider{
+    margin: 20px;
 }
 
 

@@ -13,11 +13,11 @@ export class DeleteComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data:any,private host:HostServiceService) { }
 
   ngOnInit(): void {
+    
   }
 
   Delete(){
     this.host.displayspinner.next(true);
-
     this.host.Delete(this.data.name);
   }
 

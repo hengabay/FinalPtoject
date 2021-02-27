@@ -14,14 +14,16 @@ import { CreateComponent } from './create/create/create.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit  {
-  
+  nametanent:string = '';
   constructor(private service:HostServiceService,public dialog: MatDialog ){
     
   }
   
 
   ngOnInit(){
-
+    this.service.getTenant().subscribe(tenant =>{
+      this.nametanent = tenant.name;
+    })
   }
 
   AddApp(){

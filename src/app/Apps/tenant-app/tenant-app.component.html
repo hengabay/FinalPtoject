@@ -1,7 +1,10 @@
 <div *ngIf="displaySppiner===true" class="spinner">
   <mat-spinner></mat-spinner>
   </div>
+  
 <div class="applications" *ngFor="let App of Apps;let i = index">
+  
+  
     <mat-card class="example-card">
 
         <mat-card-header>
@@ -14,20 +17,24 @@
         <mat-card-content>
 
             <mat-form-field>
-                <mat-label >Run time</mat-label>
-                <mat-select [(value)]="selected">
-                  <div  *ngFor="let runtime of App.blocks">
-                    <mat-option (click)="getRunTime(runtime.runtime)" value={{runtime.runtime}}>{{runtime.runtime}}</mat-option>
+                <mat-label >Blocks</mat-label>
+                <mat-select [(ngModel)]="selected">
+                  <div  *ngFor="let Block of App.blocks">
+                    <mat-option (click)="getselected(Block.name,App.name)" value={{Block.name}}>{{Block.name}}</mat-option>
                   </div>
                 </mat-select>
               </mat-form-field>
+              <button (click)="addBlock(App.name)" mat-button aria-label="add block">
+                <mat-icon>add</mat-icon>
+              </button>
              
         </mat-card-content>
 
         <mat-card-actions>
             <button (click)="delete(App.name)" mat-raised-button color="warn"><mat-icon>delete</mat-icon></button>
-            <button [disabled]="!selected" mat-button color="warn">Info Block <mat-icon>visibility</mat-icon></button>
+            <button (click)="info()" mat-button color="warn">Info Block <mat-icon>visibility</mat-icon></button>
         </mat-card-actions>
 
       </mat-card>
+      
 </div>

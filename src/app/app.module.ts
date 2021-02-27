@@ -10,13 +10,15 @@ import { TenantAppComponent } from './Apps/tenant-app/tenant-app.component';
 import { CreateComponent } from './create/create/create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DeleteComponent } from './delete/delete/delete.component';
+import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TenantAppComponent,
     CreateComponent,
-    DeleteComponent
+    DeleteComponent,
+    AddBlockComponent
   ],
   entryComponents:[CreateComponent],
   imports: [

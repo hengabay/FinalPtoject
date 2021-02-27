@@ -14,6 +14,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatInputModule} from '@angular/material/input';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 
@@ -35,6 +36,7 @@ const MaterialComponent = [
   ,MatDialogModule
   ,MatGridListModule
   ,MatInputModule
+  ,MatDividerModule
 ];
 
 

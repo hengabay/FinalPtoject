@@ -32,6 +32,22 @@ export class HostedApplication {
 	}
 }
 
+export class Tenant {
+	constructor(
+		public id: number,
+		public name: string,
+		public profile: {[key: string]: any},
+		public active: boolean,
+		public createdAt?:Date,
+		public lastActivity?:Date,
+	) {}
+
+	public static from(tenant:Partial<Tenant>):Tenant {
+		return new Tenant(tenant.id!, tenant.name!, tenant.profile!, tenant.active!);
+	}
+}
+
+
 
 
 @Injectable({
@@ -44,6 +60,7 @@ export class HostServiceService {
   public ListAppChange = new Subject<HostedApplication[]>();
   private ListApp:HostedApplication[] = [];
   displayspinner = new Subject<boolean>();
+
   constructor(private httper:HttpClient,private config:ConfigService) { 
      this.urlBase = config.config.api;
      this.token = config.config.token;
@@ -79,7 +96,7 @@ export class HostServiceService {
       ).pipe(map(res => HostedApplication.from(res)));
   }
 
-  create(newApp:HostedApplication){
+  create(newApp:HostedApplication):Observable<HostedApplication>{
     return this.httper.post<HostedApplication>(`${this.urlBase}/hosted-applications`,
     newApp,
     {
@@ -94,7 +111,7 @@ export class HostServiceService {
    }
 
    Delete(nameDeleted:string){
-    return this.httper.delete(`${this.urlBase}/hosted-applications/${nameDeleted}`,
+     this.httper.delete(`${this.urlBase}/hosted-applications/${nameDeleted}`,
     {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).subscribe(() => {
@@ -107,7 +124,22 @@ export class HostServiceService {
     });
    }
 
-   
+   getTenant():Observable<Tenant>{
+    return this.httper.get<Tenant>(`${this.urlBase}/tenants/self`,
+    {
+      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+    }).pipe(map(res => Tenant.from(res)));
+   }
+
+   postBlock(nameApp:string,block:HostedApplicationBlock){
+     return this.httper.post<HostedApplication>(`${this.urlBase}/hosted-applications/${nameApp}/${block.name}`,block,
+     {
+      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+    }).pipe(map(res => {
+      this.ListApp.find(a => a.name === nameApp)?.blocks.push(block);
+      this.ListAppChange.next(this.ListApp.slice());
+    }));
+   }
 
   
 	}

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl,FormGroup,Validators } from '@angular/forms';
-import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
+import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
 
 @Component({
   selector: 'app-create',
@@ -26,7 +26,6 @@ export class CreateComponent implements OnInit {
 
 
   onSubmit(){
-    console.log(this.AddAppForm)
     this.host.displayspinner.next(true);
     const newApp:HostedApplication = HostedApplication.from({
       name:this.AddAppForm.value.appname,
