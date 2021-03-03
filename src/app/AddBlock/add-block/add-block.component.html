@@ -1,4 +1,4 @@
-<h3 mat-dialog-title>Create Application!</h3>
+<h3 mat-dialog-title>Create block!</h3>
 <form [formGroup]="AddBlockForm" (ngSubmit)="onSubmit()" >
 
   <mat-dialog-content >
@@ -8,7 +8,7 @@
           <input formControlName="blockname" matInput  placeholder="Name">
           <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
           <mat-hint>Hint</mat-hint>
-          <mat-error *ngIf="AddBlockForm.get('appname')">The name is invalid</mat-error>
+          <mat-error *ngIf="AddBlockForm.get('blockname')">{{AddBlockForm.value.blockname == ''? 'Empty field or the name is to short':'This name exists'}}</mat-error>
         </mat-form-field>
       </p>
       
@@ -28,7 +28,7 @@
       </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button  mat-dialog-close  type="submit" mat-button color="primary">Add</button>
+    <button [disabled]="!AddBlockForm.valid" mat-dialog-close  type="submit" mat-button color="primary">Add</button>
     <button (click)="AddBlockForm.reset()"  type="button" mat-button color="primary">Clear</button>
   </mat-dialog-actions>
 

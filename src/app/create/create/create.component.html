@@ -7,8 +7,8 @@
           <mat-label>Application name</mat-label>
           <input formControlName="appname" matInput  placeholder="Name">
           <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-          <mat-hint>Hint</mat-hint>
-          <mat-error *ngIf="AddAppForm.get('appname')">The name is invalid</mat-error>
+          <mat-hint>Choose name</mat-hint>
+          <mat-error *ngIf="AddAppForm.get('appname')">{{AddAppForm.value.appname == ''? 'Empty field or the name is to short':'This name exists'}}</mat-error>
         </mat-form-field>
       </p>
       
@@ -19,7 +19,8 @@
                 <div *ngFor="let runtime of runtimes">
                     <mat-option value={{runtime}}>{{runtime}}</mat-option>
                 </div>
-            </mat-select>          
+            </mat-select>       
+            <mat-hint>Choose a runtime for your default block called main</mat-hint>   
           </mat-form-field>
       </p> 
       <mat-form-field >

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
+import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
 
 @Component({
   selector: 'app-add-block',
@@ -12,7 +12,7 @@ export class AddBlockComponent implements OnInit {
   runtimes:string[] = ['javascript','ruby','static','forward','select'];
 
   AddBlockForm: FormGroup=new FormGroup({
-    'blockname':new FormControl('',Validators.required),
+    'blockname':new FormControl('',[Validators.required,this.checkValidName.bind(this),Validators.minLength(2)]),
     'runtime':new FormControl(null,Validators.required),
     'code':new FormControl(''),
   });
@@ -28,11 +28,23 @@ export class AddBlockComponent implements OnInit {
       name:this.AddBlockForm.value.blockname,
       runtime:this.AddBlockForm.value.runtime,
       code:this.AddBlockForm.value.code,
+      url:`cx://hosted-app/${this.AddBlockForm.value.appname}/${this.AddBlockForm.value.blockname}`
     });
     this.host.postBlock(this.data.name,newBlock).subscribe(data => {
       this.host.displayspinner.next(false);
     })
   }
-  
+
+  checkValidName(control:FormControl): {[s:string]:boolean}|null {
+    let temp:HostedApplicationBlock[] =[];
+    this.host.getListApp().forEach((element:HostedApplication) => {
+      if(element.name == this.data.name)
+        temp = element.blocks.filter(name => name.name === control.value)      
+    });
+      if(temp.length>0){
+        return {'nameExists':true}
+      }
+      return null;
+  }
 
 }

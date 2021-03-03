@@ -10,11 +10,12 @@ export class HostedApplicationBlock {
 	constructor(
     public name:string,
      public runtime:string,
-      public code:string
+      public code:string,
+      public url:string
       ) {}
 
       public static fromBlock(hostblock:Partial<HostedApplicationBlock>):HostedApplicationBlock {
-        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!);
+        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!,hostblock.url!);
       }
 }
 
@@ -93,7 +94,9 @@ export class HostServiceService {
       {
         headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
       }
-      ).pipe(map(res => HostedApplication.from(res)));
+      ).pipe(map(res => {
+        console.log(res);
+       return HostedApplication.from(res)}));
   }
 
   create(newApp:HostedApplication):Observable<HostedApplication>{
@@ -139,6 +142,13 @@ export class HostServiceService {
       this.ListApp.find(a => a.name === nameApp)?.blocks.push(block);
       this.ListAppChange.next(this.ListApp.slice());
     }));
+   }
+
+   listRunTime(name:string){
+     return this.httper.get(`${this.urlBase}/hosted-applications/runtimes`,
+     {
+      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+    })
    }
 
   

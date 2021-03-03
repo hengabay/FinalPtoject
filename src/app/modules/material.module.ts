@@ -15,6 +15,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatInputModule} from '@angular/material/input';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -37,6 +39,8 @@ const MaterialComponent = [
   ,MatGridListModule
   ,MatInputModule
   ,MatDividerModule
+  ,MatTabsModule
+  ,MatTooltipModule
 ];
 
 
