@@ -6,15 +6,12 @@ import 'ace-builds/src-noconflict/mode-xml';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-beautify';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
 
 
 
 const THEME = 'ace/theme/github'; 
-const LANG = 'ace/mode/javascript';
-const RUBY = 'ace/mode/ruby';
-const XML = 'ace/mode/xml';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -25,19 +22,12 @@ export class EditorComponent implements OnInit {
   
   private codeEditor?: ace.Ace.Editor;
   private editorBeautify:any;
-  block?:{nameApp?:string,nameblock?:string,runtime?:string,code?:string};
+  block?:{nameApp?:string,name?:string,runtime?:string,code?:string};
 
-  constructor(private rout:ActivatedRoute,private host:HostServiceService) { }
+  constructor(private rout:ActivatedRoute,private host:HostServiceService,private router:Router) { }
 
   ngOnInit(): void {
-    let tempApp:HostedApplication|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name);
-    let tempBlock:HostedApplicationBlock|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name)?.blocks.find(block => this.rout.snapshot.params['nameblock'] === block.name);
-    this.block = {
-      nameApp: tempApp?.name,
-      nameblock: tempBlock?.name,
-      runtime:tempBlock?.runtime,
-      code:tempBlock?.code,
-    }
+    this.getDataUrl();
     
     this.rout.params.subscribe(
       (params:Params) => {
@@ -45,54 +35,19 @@ export class EditorComponent implements OnInit {
           (app:HostedApplication) => {
             this.block = {
               nameApp : app.name,
-              nameblock : app.blocks.find( block => block.name === params['nameblock'])?.name,
+              name :params['nameblock'],
               runtime : app.blocks.find( block => block.name === params['nameblock'])?.runtime ,
               code:app.blocks.find( block => block.name === params['nameblock'])?.code,
             }
+            this.codeEditor?.getSession().setMode(`ace/mode/${this.block.runtime==='static' ? 'xml':this.block.runtime}`) 
             this.codeEditor?.setValue('');
-
             this.codeEditor?.insert(`${this.block.code}`);
-          }
-        );
-       
-        
-      }
-    );
-    ace.require('ace/ext/language_tools');
-        const element = this.codeEditorElmRef?.nativeElement;
-        const editorOptions = this.getEditorOptions();
+            
 
-        this.codeEditor = ace.edit(element, editorOptions);
-        this.codeEditor.setTheme(THEME);
-        switch(this.block.runtime) { 
-          case 'javascript': { 
-            this.codeEditor.getSession().setMode(LANG);
-            break; 
-          } 
-          case 'ruby': { 
-            this.codeEditor.getSession().setMode(RUBY); 
-             break; 
-          } 
-          case 'static': { 
-            this.codeEditor.getSession().setMode(XML); 
-             break; 
-          } 
-          default: { 
-             //statements; 
-             break; 
-          } 
-       } 
-        this.codeEditor.setShowFoldWidgets(true);
-        this.editorBeautify = ace.require('ace/ext/beautify');
-        this.beautifyContent();
-        if(this.block.code){
-          this.codeEditor.setValue('');
-          this.codeEditor.insert(`${this.block.code}`);
-        }
-        else{
-          this.codeEditor.insert(`loading...`);
-        }
-        
+          });
+      });
+    this.configerEditor();
+
      }
 
     // missing propery on EditorOptions 'enableBasicAutocompletion' so this is a wolkaround still using ts
@@ -100,10 +55,7 @@ export class EditorComponent implements OnInit {
         const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
             highlightActiveLine: true,
             minLines: 14,
-            maxLines: Infinity,
-            
-        };
-
+            maxLines: Infinity};
         const extraEditorOptions = {
             enableBasicAutocompletion: true
         };
@@ -115,11 +67,50 @@ public beautifyContent() {
   if (this.codeEditor && this.editorBeautify) {
      const session = this.codeEditor.getSession();
      this.editorBeautify.beautify(session);
+  };}
+
+public configerEditor(){
+  ace.require('ace/ext/language_tools');
+  const element = this.codeEditorElmRef?.nativeElement;
+  const editorOptions = this.getEditorOptions();
+  this.codeEditor = ace.edit(element, editorOptions);
+  this.codeEditor.setTheme(THEME);
+  this.codeEditor.getSession().setMode(`ace/mode/${this.block?.runtime}`) 
+  this.codeEditor.setShowFoldWidgets(true);
+  this.editorBeautify = ace.require('ace/ext/beautify');
+  this.beautifyContent();
+  if(this.block?.code){
+    this.codeEditor.setValue('');
+    this.codeEditor.insert(`${this.block.code}`);
+  }
+  else{
+    this.codeEditor.insert(`loading...`);
   }
 }
-configerEditor(){
+public getDataUrl(){
+  let tempApp:HostedApplication|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name);
+  let tempBlock:HostedApplicationBlock|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name)?.blocks.find(block => this.rout.snapshot.params['nameblock'] === block.name);
+  this.block = {
+    nameApp: tempApp?.name,
+    name: tempBlock?.name,
+    runtime:tempBlock?.runtime,
+    code:tempBlock?.code,
+  }}
 
+  clear(){
+    this.codeEditor?.setValue('');
+  }
+
+  PostCode(){
+    this.host.displayspinner.next(true);
+    console.log(this.block?.nameApp!,HostedApplicationBlock.fromBlock(this.block!))
+    this.host.EditBlockCode(this.block?.nameApp!,HostedApplicationBlock.fromBlock(this.block!)).subscribe(
+      res =>{
+        this.host.displayspinner.next(false);
+        this.router.navigate(['/']);       
+        console.log(res)
+      });
+  }
 }
 
 
-}

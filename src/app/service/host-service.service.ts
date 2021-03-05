@@ -133,10 +133,11 @@ export class HostServiceService {
    }
 
    postBlock(nameApp:string,block:HostedApplicationBlock){
-     return this.httper.post<HostedApplication>(`${this.urlBase}/hosted-applications/${nameApp}/${block.name}`,block,
+     return this.httper.post<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block.name}`,block,
      {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).pipe(map(res => {
+      console.log(res);
       this.ListApp.find(a => a.name === nameApp)?.blocks.push(block);
       this.ListAppChange.next(this.ListApp.slice());
     }));
@@ -149,6 +150,13 @@ export class HostServiceService {
     })
    }
 
+   EditBlockCode(nameApp:string,block:HostedApplicationBlock){
+    return this.httper.put<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block.name}`,{
+      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+    }).pipe(map(res => {
+      this.ListAppChange.next(this.ListApp.slice());
+    }))
+   }
   
 	}
   
