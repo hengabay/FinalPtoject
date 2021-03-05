@@ -27,8 +27,7 @@ export class AddBlockComponent implements OnInit {
     const newBlock = HostedApplicationBlock.fromBlock({
       name:this.AddBlockForm.value.blockname,
       runtime:this.AddBlockForm.value.runtime,
-      code:this.AddBlockForm.value.code,
-      url:`cx://hosted-app/${this.AddBlockForm.value.appname}/${this.AddBlockForm.value.blockname}`
+      code:this.AddBlockForm.value.code
     });
     this.host.postBlock(this.data.name,newBlock).subscribe(data => {
       this.host.displayspinner.next(false);

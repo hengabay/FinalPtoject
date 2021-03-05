@@ -26,13 +26,25 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/appconfig.json"
+              "src/appconfig.json",
+              "src/assets",
+              "src/favicon.ico",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/ace-builds/src/",
+                "output": "/"
+              }
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/ace-builds/src/ace.js",
+              "./node_modules/ace-builds/src/theme-eclipse.js",
+              "./node_modules/ace-builds/src/theme-monokai.js",
+              "./node_modules/ace-builds/src/mode-html.js"
+            ]
           },
           "configurations": {
             "production": {

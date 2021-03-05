@@ -10,12 +10,11 @@ export class HostedApplicationBlock {
 	constructor(
     public name:string,
      public runtime:string,
-      public code:string,
-      public url:string
+      public code:string
       ) {}
 
       public static fromBlock(hostblock:Partial<HostedApplicationBlock>):HostedApplicationBlock {
-        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!,hostblock.url!);
+        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!);
       }
 }
 
@@ -95,7 +94,6 @@ export class HostServiceService {
         headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
       }
       ).pipe(map(res => {
-        console.log(res);
        return HostedApplication.from(res)}));
   }
 

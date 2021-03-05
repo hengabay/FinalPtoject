@@ -11,6 +11,7 @@ import { CreateComponent } from './create/create/create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DeleteComponent } from './delete/delete/delete.component';
 import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
+import { EditorComponent } from './editor/editor/editor.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
     TenantAppComponent,
     CreateComponent,
     DeleteComponent,
-    AddBlockComponent
+    AddBlockComponent,
+    EditorComponent
   ],
   entryComponents:[CreateComponent],
   imports: [

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl,FormGroup,NgForm,Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class CreateComponent implements OnInit {
     'runtime':new FormControl(null,Validators.required),
     'code':new FormControl(''),
   });
-  constructor(private host:HostServiceService) { }
+  constructor(private host:HostServiceService,private router:Router) { }
 
   ngOnInit(): void {
     
@@ -26,7 +27,6 @@ export class CreateComponent implements OnInit {
 
 
   onSubmit(){
-    console.log(this.AddAppForm.value);
     this.host.displayspinner.next(true);
     const newApp:HostedApplication = HostedApplication.from({
       name:this.AddAppForm.value.appname,
@@ -34,12 +34,12 @@ export class CreateComponent implements OnInit {
       blocks:[{
         name:this.AddAppForm.value.blockname,
         runtime:this.AddAppForm.value.runtime,
-        code:this.AddAppForm.value.code,
-        url:`cx://hosted-app/${this.AddAppForm.value.appname}/${this.AddAppForm.value.blockname}`
+        code:this.AddAppForm.value.code
       }]
     });
     
     this.host.create(newApp).subscribe(data =>{
+      this.router.navigate(['/']);
       this.host.displayspinner.next(false);
     })
   }

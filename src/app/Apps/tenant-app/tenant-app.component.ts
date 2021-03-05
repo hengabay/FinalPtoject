@@ -1,12 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBlockComponent } from 'src/app/AddBlock/add-block/add-block.component';
 import { DeleteComponent } from 'src/app/delete/delete/delete.component';
 import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as ace from 'ace-builds'; 
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/theme-github';
 
 
+const THEME = 'ace/theme/github'; 
+const LANG = 'ace/mode/javascript';
 
 @Component({
   selector: 'app-tenant-app',
@@ -14,16 +21,27 @@ import { DomSanitizer } from "@angular/platform-browser";
   styleUrls: ['./tenant-app.component.css']
 })
 export class TenantAppComponent implements OnInit {
+  @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
+
+  
   Apps:HostedApplication[] = [];
   displaySppiner:boolean = false;
-  constructor(private host:HostServiceService,public dialog: MatDialog,private matIconRegistry: MatIconRegistry,private domSanitizer: DomSanitizer) { 
+  private codeEditor?: ace.Ace.Editor;
+
+  constructor(private host:HostServiceService,
+              public dialog: MatDialog,
+              private matIconRegistry: MatIconRegistry,
+              private domSanitizer: DomSanitizer,
+              private router:Router,
+              private rout:ActivatedRoute) { 
     this.createIcons();
   }
 
   ngOnInit(): void {
+    this.editor();
     this.displaySppiner =true;
     this.host.displayspinner.subscribe(turn =>{
-      this.displaySppiner =turn;
+    this.displaySppiner =turn;
     });
     this.host.ListAppChange.subscribe((ap:HostedApplication[]) =>{
       this.Apps = ap;
@@ -38,12 +56,6 @@ export class TenantAppComponent implements OnInit {
       })
   }
   
-  getselected(blockname:string,appname:string){
-    // this.selected ='';
-    // this.selected = appname;
-    const chosen:HostedApplication|undefined = this.Apps.find(data => data.name===appname);
-
-  }
 
   delete(appname:string){
     
@@ -53,10 +65,10 @@ export class TenantAppComponent implements OnInit {
     this.dialog.open(AddBlockComponent,{data:{name:nameApp}})
   }
 
-  info(){
-    
+  info(nApp:string,nBlock:string){
+    this.router.navigate([`/editor/${nApp}/${nBlock}`],{relativeTo:this.rout})
   }
-
+  
   createIcons(){
     this.matIconRegistry.addSvgIcon(
       "javascript",
@@ -81,4 +93,19 @@ export class TenantAppComponent implements OnInit {
     );
   }
 
-}
+  editor(){
+    const element = this.codeEditorElmRef?.nativeElement;
+    const editorOptions: Partial<ace.Ace.EditorOptions> = {
+        highlightActiveLine: true,
+        minLines: 10,
+        maxLines: Infinity,
+    };
+
+    this.codeEditor = ace.edit(element, editorOptions);
+    this.codeEditor.setTheme(THEME);
+    this.codeEditor.getSession().setMode(LANG);
+    this.codeEditor.setShowFoldWidgets(true); // for the scope fold feature
+ }
+  }
+
+

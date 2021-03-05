@@ -5,6 +5,7 @@ import { HostedApplication, HostServiceService } from './service/host-service.se
 import {PageEvent} from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateComponent } from './create/create/create.component';
+import { Router } from '@angular/router';
 
 
 
@@ -15,7 +16,7 @@ import { CreateComponent } from './create/create/create.component';
 })
 export class AppComponent implements OnInit  {
   nametanent:string = '';
-  constructor(private service:HostServiceService,public dialog: MatDialog ){
+  constructor(private service:HostServiceService,public dialog: MatDialog,private router:Router ){
     
   }
   
