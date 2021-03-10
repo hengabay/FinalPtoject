@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddBlockComponent } from 'src/app/AddBlock/add-block/add-block.component';
 import { DeleteComponent } from 'src/app/delete/delete/delete.component';
 import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
@@ -24,7 +24,7 @@ export class TenantAppComponent implements OnInit {
   @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
 
   
-  Apps:HostedApplication[] = [];
+  public Apps:HostedApplication[] = [];
   displaySppiner:boolean = false;
   private codeEditor?: ace.Ace.Editor;
 
@@ -55,6 +55,9 @@ export class TenantAppComponent implements OnInit {
         this.displaySppiner = false;
       })
   }
+
+  icon(appName:string,blockName:string){
+  this.dialog.open(DialogDeleteBlock,{data:{app:appName,block:blockName}})  }
   
 
   delete(appname:string){
@@ -109,3 +112,21 @@ export class TenantAppComponent implements OnInit {
   }
 
 
+  @Component({
+    selector: 'dialog-delete-block',
+    templateUrl: './dialog-delete-block.html',
+  })
+  export class DialogDeleteBlock {
+  
+    constructor(
+      @Inject(MAT_DIALOG_DATA) public data: any,private host:HostServiceService) {}
+
+      Deleteblock(){
+        this.host.displayspinner.next(true);
+        this.host.Deleteblock(this.data.app,this.data.block).subscribe(
+          () => {
+            this.host.displayspinner.next(false);            
+          }
+        )
+      }
+    }

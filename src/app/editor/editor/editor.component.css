@@ -1,4 +1,10 @@
 .code-editor{
-    width: 50%;
-    border: 1px solid black;
+    border: 2px solid #f8f9fa;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    
+   
+}
+mat-card-content{
+    height: 300px;
+    overflow: auto;
 }

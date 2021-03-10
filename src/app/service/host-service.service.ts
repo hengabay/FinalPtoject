@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 
 
@@ -76,14 +76,17 @@ export class HostServiceService {
       {
         headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
       }
-      ).pipe(map(req => req.map(h =>
-        {
-          const host = HostedApplication.from(h);
-          this.ListApp.push(host);
+      ).pipe(map(req => {
+        this.ListApp =[];
+        return req.map(app =>{
+          this.ListApp.push(HostedApplication.from(app));
           this.ListAppChange.next(this.ListApp.slice());
-          this.displayspinner.next(false)
-         return host;
-        })));
+          return app;
+        })
+      }),
+      catchError((err:HttpErrorResponse) => {
+        return throwError(`Error loading configuration from ${err.url} (${err.status}): ${err.error}`);
+      }));
         
   }
   
@@ -94,7 +97,10 @@ export class HostServiceService {
         headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
       }
       ).pipe(map(res => {
-       return HostedApplication.from(res)}));
+       return HostedApplication.from(res)}),
+       catchError((err:HttpErrorResponse) => {
+        return throwError(`Error loading configuration from ${err.url} (${err.status}): ${err.error}`);
+       }));
   }
 
   create(newApp:HostedApplication):Observable<HostedApplication>{
@@ -143,20 +149,48 @@ export class HostServiceService {
     }));
    }
 
-   listRunTime(name:string){
-     return this.httper.get(`${this.urlBase}/hosted-applications/runtimes`,
+   listRunTime(){
+     return this.httper.get(`${this.urlBase}/tenants/357/applications/runtimes`,
      {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     })
    }
 
-   EditBlockCode(nameApp:string,block:HostedApplicationBlock){
-    return this.httper.put<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block.name}`,{
-      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
-    }).pipe(map(res => {
-      this.ListAppChange.next(this.ListApp.slice());
-    }))
+   EditBlockCode(nameApp:string|undefined,block:HostedApplicationBlock|undefined){
+    return this.httper.put<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block?.name}`,{code:block?.code},
+    {
+     headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+   }).pipe(map(res => {
+     this.ListApp.map(app => {
+       if(app.name === nameApp){
+         app.blocks.map(block => {
+           if(block.name === res.name)
+             block.code = res.code;
+         })
+       }
+     });
+     console.log(this.ListApp);
+     this.ListAppChange.next(this.ListApp.slice());
+     console.log(this.getListApp);
+   }));
    }
+
+   Deleteblock(nameApp:string,block:string){
+    return this.httper.delete<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block}`,
+    {
+     headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
+   }).pipe(map(() => {
+    
+     let temp:HostedApplicationBlock[] = this.ListApp.find(app => app.name === nameApp)!.blocks.filter(blocks => blocks.name !== block);      
+     if(temp.length === 0){
+      this.Delete(nameApp);
+      return;
+    }
+     this.ListApp.find(app => app.name === nameApp)!.blocks = temp;
+     this.ListAppChange.next(this.ListApp.slice());
+     return;
+   }));
+  }
   
 	}
   

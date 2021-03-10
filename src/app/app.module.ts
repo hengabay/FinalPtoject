@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material.module';
 import { HttpClientModule } from "@angular/common/http";
 import { ConfigService } from './service/config.service';
-import { TenantAppComponent } from './Apps/tenant-app/tenant-app.component';
+import { DialogDeleteBlock, TenantAppComponent } from './Apps/tenant-app/tenant-app.component';
 import { CreateComponent } from './create/create/create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DeleteComponent } from './delete/delete/delete.component';
@@ -20,7 +20,8 @@ import { EditorComponent } from './editor/editor/editor.component';
     CreateComponent,
     DeleteComponent,
     AddBlockComponent,
-    EditorComponent
+    EditorComponent,
+    DialogDeleteBlock
   ],
   entryComponents:[CreateComponent],
   imports: [

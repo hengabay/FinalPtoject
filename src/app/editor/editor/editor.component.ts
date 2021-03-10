@@ -11,7 +11,7 @@ import { HostedApplication, HostedApplicationBlock, HostServiceService } from 's
 
 
 
-const THEME = 'ace/theme/github'; 
+const THEME = 'ace/theme/twilight'; 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -22,7 +22,8 @@ export class EditorComponent implements OnInit {
   
   private codeEditor?: ace.Ace.Editor;
   private editorBeautify:any;
-  block?:{nameApp?:string,name?:string,runtime?:string,code?:string};
+  block?:HostedApplicationBlock;
+  nameApp?:string;
 
   constructor(private rout:ActivatedRoute,private host:HostServiceService,private router:Router) { }
 
@@ -33,18 +34,13 @@ export class EditorComponent implements OnInit {
       (params:Params) => {
         this.host.listblock(params['nameapp']).subscribe(
           (app:HostedApplication) => {
-            this.block = {
-              nameApp : app.name,
-              name :params['nameblock'],
-              runtime : app.blocks.find( block => block.name === params['nameblock'])?.runtime ,
-              code:app.blocks.find( block => block.name === params['nameblock'])?.code,
-            }
-            this.codeEditor?.getSession().setMode(`ace/mode/${this.block.runtime==='static' ? 'xml':this.block.runtime}`) 
+            this.nameApp =app.name
+            this.block = app.blocks.find(block => params['nameblock'] === block.name);        
+            this.codeEditor?.getSession().setMode(`ace/mode/${this.block?.runtime==='static' ? 'xml':this.block?.runtime}`) 
             this.codeEditor?.setValue('');
-            this.codeEditor?.insert(`${this.block.code}`);
-            
-
+            this.codeEditor?.insert(`${this.block?.code}`);
           });
+
       });
     this.configerEditor();
 
@@ -54,8 +50,10 @@ export class EditorComponent implements OnInit {
     private getEditorOptions(): Partial<ace.Ace.EditorOptions> & { enableBasicAutocompletion?: boolean; } {
         const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
             highlightActiveLine: true,
-            minLines: 14,
-            maxLines: Infinity};
+            minLines: 15,
+            maxLines: Infinity,
+            fontSize:20,
+          autoScrollEditorIntoView:true};
         const extraEditorOptions = {
             enableBasicAutocompletion: true
         };
@@ -70,6 +68,7 @@ public beautifyContent() {
   };}
 
 public configerEditor(){
+  ace.config.set('basePath', '');
   ace.require('ace/ext/language_tools');
   const element = this.codeEditorElmRef?.nativeElement;
   const editorOptions = this.getEditorOptions();
@@ -88,27 +87,25 @@ public configerEditor(){
   }
 }
 public getDataUrl(){
-  let tempApp:HostedApplication|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name);
-  let tempBlock:HostedApplicationBlock|undefined = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name)?.blocks.find(block => this.rout.snapshot.params['nameblock'] === block.name);
-  this.block = {
-    nameApp: tempApp?.name,
-    name: tempBlock?.name,
-    runtime:tempBlock?.runtime,
-    code:tempBlock?.code,
-  }}
+  this.nameApp = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name)?.name;
+  this.block = this.host.getListApp().find(app =>this.rout.snapshot.params['nameapp'] === app.name)?.blocks.find(block => this.rout.snapshot.params['nameblock'] === block.name);
+}
 
   clear(){
     this.codeEditor?.setValue('');
   }
 
-  PostCode(){
+  EditCode(){
+    if(typeof this.block?.code==='string' && typeof this.codeEditor?.getValue() === 'string' ){
+      this.block.code = this.codeEditor.getValue();
+      console.log(this.block.code)
+    }
     this.host.displayspinner.next(true);
-    console.log(this.block?.nameApp!,HostedApplicationBlock.fromBlock(this.block!))
-    this.host.EditBlockCode(this.block?.nameApp!,HostedApplicationBlock.fromBlock(this.block!)).subscribe(
-      res =>{
+    const tempblock = HostedApplicationBlock.fromBlock(this.block!)
+    this.host.EditBlockCode(this.nameApp,tempblock).subscribe(
+      () =>{
         this.host.displayspinner.next(false);
         this.router.navigate(['/']);       
-        console.log(res)
       });
   }
 }

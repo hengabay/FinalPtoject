@@ -23,6 +23,7 @@ export class AppComponent implements OnInit  {
 
   ngOnInit(){
     this.service.getTenant().subscribe(tenant =>{
+      console.log(tenant)
       this.nametanent = tenant.name;
     });
 

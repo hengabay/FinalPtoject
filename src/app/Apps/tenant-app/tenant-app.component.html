@@ -12,15 +12,15 @@
           
         
         <mat-card-content>
-            <mat-tab-group >
+            <mat-tab-group dynamicHeight="true">
               <div  *ngFor="let block of App.blocks;let j = index">
                 <mat-tab  >
-                  <ng-template mat-tab-label>
-                    <mat-icon svgIcon={{block.runtime}}></mat-icon>
-                      | {{block.name}}
+                  <ng-template  mat-tab-label>
+                    <mat-icon matTooltipPosition="above" matTooltip="Runtime {{block.runtime}}" svgIcon={{block.runtime}}></mat-icon>
+                      | {{block.name}}  <mat-icon class="icon"  matTooltipPosition="above" matTooltip="Delete block" (click)="icon(App.name,block.name)">clear</mat-icon>
                   </ng-template>          
                    <h3><button matTooltip="Edit your code" (click)="info(App.name,block.name)" mat-button><mat-icon>code</mat-icon></button></h3>
-                   {{block.code}}
+                  <pre>{{block.code}}</pre> 
                 </mat-tab>
               </div>
             </mat-tab-group>
@@ -29,10 +29,10 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button matTooltip="Delete application" matTooltipPosition="above" (click)="delete(App.name)" mat-raised-button color="warn"><mat-icon>delete</mat-icon></button>
+            <button  matTooltip="Delete application" matTooltipPosition="above" (click)="delete(App.name)" mat-raised-button color="warn"><mat-icon>delete</mat-icon></button>
             <button  matTooltip="Create block" matTooltipPosition="above" (click)="addBlock(App.name)" mat-button aria-label="add block">
               <mat-icon>add</mat-icon>
-            </button>
+            </button> 
         </mat-card-actions>
         
 

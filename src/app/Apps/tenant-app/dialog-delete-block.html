@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{data.block}}</h2>
+<mat-dialog-content>are you sure you want to delete this block </mat-dialog-content>
+<mat-dialog-actions>
+    <button (click)="Deleteblock()" color="warn" mat-button mat-dialog-close >Delete</button>
+    <button  mat-button mat-dialog-close mat-dialog-close="false">cancel</button>
+</mat-dialog-actions>
