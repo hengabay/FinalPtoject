@@ -3,6 +3,9 @@
     max-width: 500px;
     width: 100%;
   }
+  mat-dialog-content{
+    overflow: auto;
+  }
   
   .example-full-width {
     width: 100%;
@@ -10,5 +13,12 @@
 
   .code-editor{
     width: 100%;
+    overflow: auto;
+
   }
+  .container{
+    display: flex;
+    justify-content: space-around;
+  }
+  
   

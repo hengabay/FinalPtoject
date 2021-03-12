@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as ace from 'ace-builds'; 
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
+import { CreateComponent } from 'src/app/create/create/create.component';
 
 
 const THEME = 'ace/theme/github'; 
@@ -65,7 +66,7 @@ export class TenantAppComponent implements OnInit {
    this.dialog.open(DeleteComponent,{data:{name:appname}})
   }
   addBlock(nameApp:string){
-    this.dialog.open(AddBlockComponent,{data:{name:nameApp}})
+    this.dialog.open(CreateComponent,{data:{name:nameApp}})
   }
 
   info(nApp:string,nBlock:string){

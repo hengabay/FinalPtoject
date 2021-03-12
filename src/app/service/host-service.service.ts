@@ -9,12 +9,15 @@ import { FormGroup } from '@angular/forms';
 export class HostedApplicationBlock {
 	constructor(
     public name:string,
-     public runtime:string,
-      public code:string
+    public runtime:string,
+    public code:string,
+    public application:string,
+    public url:string
+
       ) {}
 
       public static fromBlock(hostblock:Partial<HostedApplicationBlock>):HostedApplicationBlock {
-        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!);
+        return new HostedApplicationBlock(hostblock.name!, hostblock.runtime!, hostblock.code!,hostblock.application!,hostblock.url!);
       }
 }
 
@@ -55,6 +58,7 @@ export class Tenant {
 })
 
 export class HostServiceService {
+  public Recode:string|undefined = '';
   private urlBase:string;
   private token:string;
   public ListAppChange = new Subject<HostedApplication[]>();
@@ -78,6 +82,7 @@ export class HostServiceService {
       }
       ).pipe(map(req => {
         this.ListApp =[];
+        req.sort((a:HostedApplication,b:HostedApplication) => +b.id - +a.id)
         return req.map(app =>{
           this.ListApp.push(HostedApplication.from(app));
           this.ListAppChange.next(this.ListApp.slice());
@@ -104,14 +109,13 @@ export class HostServiceService {
   }
 
   create(newApp:HostedApplication):Observable<HostedApplication>{
-    return this.httper.post<HostedApplication>(`${this.urlBase}/hosted-applications`,
+    return this.httper.post<HostedApplication>(`${this.urlBase}/hosted-applications/${newApp.name}`,
     newApp,
     {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).pipe(map( (data:HostedApplication) => {
       this.ListApp.push(data);
       this.ListAppChange.next(this.ListApp.slice());
-      
       return data;
     }))
       
@@ -150,7 +154,7 @@ export class HostServiceService {
    }
 
    listRunTime(){
-     return this.httper.get(`${this.urlBase}/tenants/357/applications/runtimes`,
+     return this.httper.get<string[]>(`${this.urlBase}/apps/runtimes`,
      {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     })
@@ -179,8 +183,7 @@ export class HostServiceService {
     return this.httper.delete<HostedApplicationBlock>(`${this.urlBase}/hosted-applications/${nameApp}/${block}`,
     {
      headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
-   }).pipe(map(() => {
-    
+   }).pipe(map(() => {   
      let temp:HostedApplicationBlock[] = this.ListApp.find(app => app.name === nameApp)!.blocks.filter(blocks => blocks.name !== block);      
      if(temp.length === 0){
       this.Delete(nameApp);

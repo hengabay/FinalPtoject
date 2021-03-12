@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnChanges, OnInit, SimpleChange, ViewChild } from '@angular/core';
 import { FormControl,FormGroup,NgForm,Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
+import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
 import * as ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-ruby';
@@ -17,61 +17,100 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-export class CreateComponent implements OnInit {
-  savecode:string|undefined;
-  errorInvalidName:boolean = false;
-  runtimes:string[] = ['javascript','ruby','static','forward','select'];
-  AddAppForm: FormGroup=new FormGroup({
-    'appname':new FormControl('',[Validators.required,this.checkValidName.bind(this)]),
-    'blockname':new FormControl('main'),
-    'runtime':new FormControl(null,Validators.required),
-  });
+export class CreateComponent implements OnInit,OnChanges {
+    selectedRuntime:string = '';
+    Recode:string|undefined;
+    errorInvalidName:boolean = false;
+    runtimes:string[] = [];
+    CreateForm: FormGroup=new FormGroup({
+      'appname':new FormControl('',[Validators.required,this.checkValidName.bind(this)]),
+      'defaultBlock':new FormControl('main'),
+      'blockname':new FormControl('',[Validators.required,this.checkValisNameBlock.bind(this)]),
+      'runtime':new FormControl(null,Validators.required),
+    });
   constructor(private host:HostServiceService,
               private router:Router, 
-              private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:any|undefined) {
-                
-                host.listRunTime().subscribe(
-                 runtime =>  console.log(runtime)
-                )
+              private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:{name:string}) {             
               }
   @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
   
-  private codeEditor?: ace.Ace.Editor;
-  private editorBeautify:any;
+    private codeEditor?: ace.Ace.Editor;
+    private editorBeautify:any;
+    ngOnChanges(){
+      console.log('hello');
+    }
   ngOnInit(): void {    
+    this.host.listRunTime().subscribe(runtime => {
+      this.runtimes.push(...runtime);
+    });              
+      
     this.configerEditor();
   }
 
   onSubmit(){
+    if(!this.data){
+      this.host.displayspinner.next(true);
+      const newApp:HostedApplication = HostedApplication.from({
+        name:this.CreateForm.value.appname,
+        url:`cx://hosted-app/${this.CreateForm.value.appname}/${this.CreateForm.value.defaultBlock}`,
+        blocks:[{
+          name:this.CreateForm.value.defaultBlock,
+          runtime:this.CreateForm.value.runtime,
+          code:this.codeEditor!.getValue(),
+          application:this.CreateForm.value.appname,
+          url:`cx://hosted-app/${this.CreateForm.value.appname}/${this.CreateForm.value.defaultBlock}`
+        }]
+      });
+      this.host.create(newApp).subscribe(data =>{
+        this.router.navigate(['/']);
+        this.host.Recode ='';
+        this.host.displayspinner.next(false);
+      },
+      (err:HttpErrorResponse) => {
+        if(err.status === 409){
+          alert("We are sorry there is a conflict, choose another name for the application");
+          this.host.Recode =this.codeEditor?.getValue()
+          this.dialog.open(CreateComponent);  
+        }})    
+      }
+      else{
+        this.host.displayspinner.next(true);
+        const newBlock = HostedApplicationBlock.fromBlock({
+          name:this.CreateForm.value.blockname,
+          runtime:this.CreateForm.value.runtime,
+          code:this.codeEditor!.getValue(),
+          application:this.data.name,
+          url:`cx://hosted-app/${this.data.name}/${this.CreateForm.value.blockname}`
+        });
+        this.host.postBlock(this.data.name,newBlock).subscribe(data => {
+          console.log(data);
+          this.host.displayspinner.next(false);
+        },
+        (err:HttpErrorResponse) => {
+          this.host.displayspinner.next(false);
+          if(err.status === 409){
+            alert("We are sorry there is a conflict, choose another name for the block");
+            this.host.Recode =this.codeEditor?.getValue()
+            this.dialog.open(CreateComponent);  
+          }})
+      }
     
-    console.log(this.codeEditor?.getValue())
-    this.host.displayspinner.next(true);
-    const newApp:HostedApplication = HostedApplication.from({
-      name:this.AddAppForm.value.appname,
-      url:`cx://hosted-app/${this.AddAppForm.value.appname}/${this.AddAppForm.value.blockname}`,
-      blocks:[{
-        name:this.AddAppForm.value.blockname,
-        runtime:this.AddAppForm.value.runtime,
-        code:this.codeEditor!.getValue()
-      }]
-    });
-    
-    this.host.create(newApp).subscribe(data =>{
-      this.router.navigate(['/']);
-      this.host.displayspinner.next(false);
-    },
-    (err:HttpErrorResponse) => {
-      this.host.displayspinner.next(false);
-      if(err.status === 409){
-        alert("We are sorry there is a conflict, choose another name for the application")
-        this.dialog.open(CreateComponent,{data:{runtime:this.AddAppForm.value.runtime,code:this.codeEditor?.getValue()}});  
-      }})
     }
 
   checkValidName(control:FormControl): {[s:string]:boolean}|null {
     let temp:HostedApplication[] =[];
       temp = this.host.getListApp().filter(name => name.name === control.value);
       if(temp.length>0){
+        return {'nameExists':true}
+      }
+      return null;
+  }
+  checkValisNameBlock(control:FormControl): {[s:string]:boolean}|null{
+    let temp:HostedApplicationBlock[]|undefined =[];
+    if(this.data){
+      temp = this.host.getListApp().find(name => name.name === this.data.name)?.blocks.filter(block => block.name === control.value);
+    }
+      if(temp!.length>0){
         return {'nameExists':true}
       }
       return null;
@@ -107,10 +146,23 @@ public beautifyContent() {
     this.codeEditor.setShowFoldWidgets(true);
     this.editorBeautify = ace.require('ace/ext/beautify');
     this.beautifyContent();
-    if(this.data != null){
-      this.codeEditor?.insert(`${this.data.code}`);
-    }  
-    
+    this.codeEditor?.insert(`${this.host.Recode}`);
+  }
+  getRuntime(runtime:string){
+    switch(runtime) { 
+      case 'javascript': { 
+        this.codeEditor?.getSession().setMode(`ace/mode/javascript`) 
+         break; 
+      } 
+      case 'ruby': { 
+        this.codeEditor?.getSession().setMode(`ace/mode/ruby`) 
+         break; 
+      } 
+      default: { 
+        this.codeEditor?.getSession().setMode(`ace/mode/xml`)  
+         break; 
+      } 
+   } 
   }
     
   

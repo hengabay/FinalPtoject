@@ -17,7 +17,7 @@ export class AddBlockComponent implements OnInit {
     'code':new FormControl(''),
   });
   
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any,private host:HostServiceService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public app:any,private host:HostServiceService) { }
 
   ngOnInit(): void {
   }
@@ -27,9 +27,12 @@ export class AddBlockComponent implements OnInit {
     const newBlock = HostedApplicationBlock.fromBlock({
       name:this.AddBlockForm.value.blockname,
       runtime:this.AddBlockForm.value.runtime,
-      code:this.AddBlockForm.value.code
+      code:this.AddBlockForm.value.code,
+      application:this.app.name,
+      url:`cx://hosted-app/${this.app.name}/${this.AddBlockForm.value.blockname}`
     });
-    this.host.postBlock(this.data.name,newBlock).subscribe(data => {
+    this.host.postBlock(this.app.name,newBlock).subscribe(data => {
+      console.log(data);
       this.host.displayspinner.next(false);
     })
   }
@@ -37,7 +40,7 @@ export class AddBlockComponent implements OnInit {
   checkValidName(control:FormControl): {[s:string]:boolean}|null {
     let temp:HostedApplicationBlock[] =[];
     this.host.getListApp().forEach((element:HostedApplication) => {
-      if(element.name == this.data.name)
+      if(element.name == this.app.name)
         temp = element.blocks.filter(name => name.name === control.value)      
     });
       if(temp.length>0){

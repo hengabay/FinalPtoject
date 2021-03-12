@@ -134,17 +134,21 @@ table{
 }
 .spinner{
     z-index: 2;
-    position: relative;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    display: inline;
+    
 }
-mat-spinner{
-    height: 80rem;
-}
+
 .divider{
     margin: 20px;
+}
+
+code {
+    font-size: 87.5%;
+    color: #009790;
+    word-wrap: break-word;
 }
 
 

@@ -1,40 +1,51 @@
-<h3 mat-dialog-title align="center">Create Application!</h3>
-<form [formGroup]="AddAppForm" (ngSubmit)="onSubmit()" >
+<form [formGroup]="CreateForm" (ngSubmit)="onSubmit()" >
   <mat-dialog-content style="width: 550px;" >
-    <mat-grid-list cols="2">
-      <mat-grid-tile>
-    <p>
-        <mat-form-field appearance="outline" >
-          <mat-label>Application name</mat-label>
-          <input  formControlName="appname" matInput  placeholder="Name">
-          <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-          <mat-hint>Choose name</mat-hint>
-          <mat-error *ngIf="AddAppForm.get('appname')">{{AddAppForm.value.appname == ''? 'Empty field or the name is to short':'This name exists'}}</mat-error>
-        </mat-form-field>
-      </p>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <p>
-        <mat-form-field appearance="outline">
-            <mat-label>Runtime</mat-label>
-            <mat-select formControlName="runtime">
-                <div *ngFor="let runtime of runtimes">
-                    <mat-option value={{runtime}}>{{runtime}}</mat-option>
-                </div>
-            </mat-select>       
-            <mat-hint>Choose a runtime for your default block called main</mat-hint>   
+    <mat-card-title style="margin-bottom: 10px;" align=center>Create {{data?'Block':'Application'}}</mat-card-title>
+    <mat-card-subtitle *ngIf="!data" style="margin-top: 20px;">You will create application with default block colled <code>Main</code></mat-card-subtitle>
+    <div class="container">
+      <div class="box-1">
+
+      <p *ngIf="!data">
+          <mat-form-field appearance="outline" >
+            <mat-label>Application name</mat-label>
+            <input  formControlName="appname" matInput  placeholder="Name">
+            <mat-hint *ngIf="!CreateForm.touched">Choose name</mat-hint>
+            <mat-error *ngIf="CreateForm.get('appname')">{{CreateForm.value.appname == ''? 'Empty field ':'This name exists'}}</mat-error>
           </mat-form-field>
-      </p> 
-    </mat-grid-tile>
-    </mat-grid-list>
+        </p>
+        <p *ngIf="data">
+          <mat-form-field appearance="outline" >
+            <mat-label>Block name</mat-label>
+            <input  formControlName="blockname" matInput  placeholder="Name">
+            <mat-hint *ngIf="!CreateForm.touched">Choose name</mat-hint>
+            <mat-error *ngIf="CreateForm.get('blockname')">{{CreateForm.value.blockname == ''? 'Empty field ':'This name exists'}}</mat-error>
+          </mat-form-field>
+        </p>
+    </div>
+      <div class="box-2">
+        <p>
+          <mat-form-field appearance="outline">
+              <mat-label>Runtime</mat-label>
+              <mat-select  formControlName="runtime">
+                  <div *ngFor="let runtime of runtimes">
+                      <mat-option (click)="getRuntime(runtime)" value={{runtime}}>{{runtime}}</mat-option>
+                  </div> 
+              </mat-select>       
+              <mat-error *ngIf="CreateForm.get('runtime')">Please choose an runtime</mat-error>
+              <mat-hint *ngIf="!CreateForm.touched">Choose a runtime for your default block called <code>Main</code></mat-hint>   
+            </mat-form-field>
+        </p> 
+      </div>
+    </div>
         <mat-label>Write your code</mat-label>
         <div matInput  class="code-editor" #codeEditor></div>
 
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button  mat-dialog-close [disabled]="!AddAppForm.valid" type="submit" mat-button color="primary">Add</button>
-    <button (click)="AddAppForm.reset()"  type="button" mat-button color="primary">Clear</button>
+    <button  mat-dialog-close [disabled]="!((CreateForm.controls.appname.valid || CreateForm.controls.blockname.valid) && CreateForm.controls.runtime.valid)" type="submit" mat-button color="primary">Create</button>
+    <button  mat-dialog-close  type="button" mat-button color="primary">Cancel</button>
   </mat-dialog-actions>
+  
 </form>
 
 
