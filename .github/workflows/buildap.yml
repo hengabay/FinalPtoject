@@ -18,6 +18,6 @@ jobs:
           node-version: 12.x
       - uses: bahmutov/npm-install@v1.6.0
       - name: בניית אפלקצית אנגולר
-        run: ng build
+        run: npm run build
 
       
