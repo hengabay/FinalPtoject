@@ -19,5 +19,12 @@ jobs:
       - uses: bahmutov/npm-install@v1.6.0
       - name: בניית אפלקצית אנגולר
         run: npm run build
+      - name: S3 Sync
+        uses: ItsKarma/aws-cli@v1.70.0
+        with:
+          args: s3 sync --delete --acl public-read dist/Host-Application/ s3://appbuilder.staging.cloudonix.io/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-2"
 
-      
