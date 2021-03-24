@@ -12,6 +12,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DeleteComponent } from './delete/delete/delete.component';
 import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
 import { EditorComponent } from './editor/editor/editor.component';
+import { MatFileUploadModule } from 'angular-material-fileupload';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { EditorComponent } from './editor/editor/editor.component';
     MaterialModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatFileUploadModule
   ],
   providers: [
     ConfigService,

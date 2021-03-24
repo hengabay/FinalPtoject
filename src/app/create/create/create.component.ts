@@ -11,6 +11,8 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-beautify';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CompileShallowModuleMetadata } from '@angular/compiler';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create',
@@ -33,13 +35,12 @@ export class CreateComponent implements OnInit,OnChanges {
               private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:{name:string}) {             
               }
   @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
-  
     private codeEditor?: ace.Ace.Editor;
     private editorBeautify:any;
     ngOnChanges(){
       console.log('hello');
     }
-  ngOnInit(): void {    
+  ngOnInit(): void { 
     this.host.listRunTime().subscribe(runtime => {
       this.runtimes.push(...runtime);
     });              
@@ -163,6 +164,29 @@ public beautifyContent() {
          break; 
       } 
    } 
+  }
+
+  uploadFile(file:any){
+    let files:File =file.target.files[0];
+    let type:string = files.type;
+    console.log(files.type.search("text"))
+    if(type.search("text") !== -1){
+      getBase64(files).then(
+        (data:any) => this.host.getfile(data).subscribe(data =>{},
+        (err:HttpErrorResponse) =>    this.codeEditor?.insert(`${err.error.text}`)));    
+    }
+    else{
+      alert("Please choose text file")
+    }
+   
+    function getBase64(file:any) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
   }
     
   
