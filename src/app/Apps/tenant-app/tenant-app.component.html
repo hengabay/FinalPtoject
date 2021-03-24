@@ -20,7 +20,7 @@
                       | {{block.name}}  <mat-icon class="icon"  matTooltipPosition="above" matTooltip="Delete block" (click)="icon(App.name,block.name)">delete</mat-icon>
                   </ng-template>          
                    <h3><button matTooltip="Edit your code" (click)="info(App.name,block.name)" mat-button><mat-icon>code</mat-icon></button></h3>
-                <app-editor></app-editor>                
+                <pre>{{block.code}}</pre>                
               </mat-tab>
               </div>
             </mat-tab-group>
