@@ -17,6 +17,11 @@ jobs:
         with:
           node-version: 12.x
       - uses: bahmutov/npm-install@v1.6.0
+      - name: create appcinfig.json
+        env:
+          TOKEN_APPRUPPIN: ${{ secrets.TOKEN }}
+        run: |
+          echo "{\"api\": \"https://api.staging.cloudonix.io\",\"token\": \"$TOKEN_APPRUPPIN\"}">src/appconfig.json
       - name: בניית אפלקצית אנגולר
         run: npm run build
       - name: S3 Sync
