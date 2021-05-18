@@ -65,6 +65,12 @@ export class HostServiceService {
   private ListApp:HostedApplication[] = [];
   displayspinner = new Subject<boolean>();
 
+  public afuConfig = {
+    uploadAPI: {
+      url:"https://example-file-upload-api"
+    }
+};
+
   constructor(private httper:HttpClient,private config:ConfigService) { 
      this.urlBase = config.config.api;
      this.token = config.config.token;
@@ -115,6 +121,7 @@ export class HostServiceService {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).pipe(map( (data:HostedApplication) => {
       this.ListApp.push(data);
+      this.ListApp.sort((a:HostedApplication,b:HostedApplication) => +b.id - +a.id);
       this.ListAppChange.next(this.ListApp.slice());
       return data;
     }))

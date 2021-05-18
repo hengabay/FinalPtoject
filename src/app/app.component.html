@@ -1,6 +1,7 @@
 <mat-card class="card">
+	<div class="stickyHeader">
 	<mat-card-header class="header">
-	  
+		
 		  <div class="logo-box">
 			<img src="../assets/img/cloudonix.png" alt="cloudonix img" class="logo">
 		  </div>
@@ -11,20 +12,19 @@
 			  </h1>
 		  </div>
 		  <div class="add-app">
-			<button matTooltip="Create application" matTooltipPosition="above" (click)="AddApp()" mat-fab  aria-label="to add aplication">
+			<button mat-mini-fab matTooltip="Create application" matTooltipPosition="above" (click)="AddApp()" mat-fab  aria-label="to add aplication">
 			  <mat-icon>add</mat-icon>
 			</button>
 		  </div>
 		
-	</mat-card-header>
-	
-	<mat-card-content>
 		
-		  
-		<router-outlet>
-			
-		</router-outlet>
-	</mat-card-content>
+	</mat-card-header>
+	</div>
+	
+			  
+		<router-outlet ></router-outlet>
+
+	
 	
   </mat-card>
   

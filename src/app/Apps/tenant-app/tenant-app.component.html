@@ -11,16 +11,16 @@
           <mat-card-title align="center" ><em>{{App.name}}</em></mat-card-title>
           
         
-        <mat-card-content>
-            <mat-tab-group dynamicHeight="true">
+        <mat-card-content class="card-content">
+            <mat-tab-group #tapRef dynamicHeight="true">
               <div  *ngFor="let block of App.blocks;let j = index">
                 <mat-tab  >
                   <ng-template  mat-tab-label>
-                    <mat-icon matTooltipPosition="above" matTooltip="Runtime {{block.runtime}}" svgIcon={{block.runtime}}></mat-icon>
-                      | {{block.name}}  <mat-icon class="icon"  matTooltipPosition="above" matTooltip="Delete block" (click)="icon(App.name,block.name)">clear</mat-icon>
+                    <mat-icon matTooltipPosition="above" matTooltip="Runtime {{block.runtime}}" svgIcon = {{block.runtime}}></mat-icon>
+                      | {{block.name}}  <mat-icon class="icon"  matTooltipPosition="above" matTooltip="Delete block" (click)="icon(App.name,block.name)">delete</mat-icon>
                   </ng-template>          
                    <h3><button matTooltip="Edit your code" (click)="info(App.name,block.name)" mat-button><mat-icon>code</mat-icon></button></h3>
-                  <pre>{{block.code}}</pre> 
+                  <pre class="code">{{block.code}}</pre>
                 </mat-tab>
               </div>
             </mat-tab-group>

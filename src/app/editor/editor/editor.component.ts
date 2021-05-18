@@ -50,7 +50,7 @@ export class EditorComponent implements OnInit {
     private getEditorOptions(): Partial<ace.Ace.EditorOptions> & { enableBasicAutocompletion?: boolean; } {
         const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
             highlightActiveLine: true,
-            minLines: 15,
+            minLines: 13,
             maxLines: Infinity,
             fontSize:20,
           autoScrollEditorIntoView:true};

@@ -1,15 +1,17 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddBlockComponent } from 'src/app/AddBlock/add-block/add-block.component';
 import { DeleteComponent } from 'src/app/delete/delete/delete.component';
 import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as ace from 'ace-builds'; 
+import * as ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/mode-ruby';
+import 'ace-builds/src-noconflict/mode-xml';
 import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ext-beautify';
 import { CreateComponent } from 'src/app/create/create/create.component';
 
 
@@ -28,6 +30,7 @@ export class TenantAppComponent implements OnInit {
   public Apps:HostedApplication[] = [];
   displaySppiner:boolean = false;
   private codeEditor?: ace.Ace.Editor;
+  private editorBeautify:any;
 
   constructor(private host:HostServiceService,
               public dialog: MatDialog,
@@ -98,18 +101,33 @@ export class TenantAppComponent implements OnInit {
   }
 
   editor(){
-    const element = this.codeEditorElmRef?.nativeElement;
-    const editorOptions: Partial<ace.Ace.EditorOptions> = {
-        highlightActiveLine: true,
-        minLines: 10,
-        maxLines: Infinity,
-    };
+    ace.config.set('basePath', '');
+    ace.require('ace/ext/language_tools');
+    const editorOptions = this.getEditorOptions();
 
+    const element = this.codeEditorElmRef?.nativeElement;
+    this.codeEditor = ace.edit(element, editorOptions);
+
+    
     this.codeEditor = ace.edit(element, editorOptions);
     this.codeEditor.setTheme(THEME);
     this.codeEditor.getSession().setMode(LANG);
     this.codeEditor.setShowFoldWidgets(true); // for the scope fold feature
  }
+ private getEditorOptions(): Partial<ace.Ace.EditorOptions> & { enableBasicAutocompletion?: boolean; } {
+  const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
+      highlightActiveLine: true,
+      minLines: 13,
+      maxLines: Infinity,
+      fontSize:20,
+    autoScrollEditorIntoView:true};
+  const extraEditorOptions = {
+      enableBasicAutocompletion: true
+  };
+  const margedOptions = Object.assign(basicEditorOptions, extraEditorOptions);
+  return margedOptions;
+}
+ 
   }
 
 

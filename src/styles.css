@@ -25,9 +25,9 @@ body{
 }
 
 .header{
-    height: 30vh;
+    height:20vh;
     
-    background-image:linear-gradient(to right bottom,rgb(119, 119, 119),rgba(119, 119, 119, 0.39)),url(../src/assets/img/cloudonix-name.png) ;
+    background-image:linear-gradient(to right bottom,rgb(119, 119, 119),rgba(119, 119, 119, 0.8)),url(../src/assets/img/cloudonix-name.png) ;
     background-size: cover;
     background-position: top;
     position: relative;
@@ -35,12 +35,12 @@ body{
 
 .logo-box{
     position: absolute;
-    top: 3rem;
-    left: 3rem;
+    top: 2rem;
+    left: 2rem;
 }
 
 .logo{
-    height: 4.5rem;
+    height: 3rem;
     
 }
 
@@ -131,6 +131,10 @@ table{
 
 .applications{
     margin:3rem;
+   
+    padding: 10px;
+    box-shadow: 5px 10px 8px #888888;
+    
 }
 .spinner{
     z-index: 2;

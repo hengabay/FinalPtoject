@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnChanges, OnInit, SimpleChange, ViewChild } from '@angular/core';
-import { FormControl,FormGroup,NgForm,Validators } from '@angular/forms';
+import { Component, ElementRef, Inject, OnInit, SimpleChange, ViewChild } from '@angular/core';
+import { FormControl,FormGroup,Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
 import * as ace from 'ace-builds';
@@ -17,7 +17,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-export class CreateComponent implements OnInit,OnChanges {
+export class CreateComponent implements OnInit {
     selectedRuntime:string = '';
     Recode:string|undefined;
     errorInvalidName:boolean = false;
@@ -27,6 +27,7 @@ export class CreateComponent implements OnInit,OnChanges {
       'defaultBlock':new FormControl('main'),
       'blockname':new FormControl('',[Validators.required,this.checkValisNameBlock.bind(this)]),
       'runtime':new FormControl(null,Validators.required),
+      'forward':new FormControl(),
     });
   constructor(private host:HostServiceService,
               private router:Router, 
@@ -36,10 +37,9 @@ export class CreateComponent implements OnInit,OnChanges {
   
     private codeEditor?: ace.Ace.Editor;
     private editorBeautify:any;
-    ngOnChanges(){
-      console.log('hello');
-    }
-  ngOnInit(): void {    
+    public CheckFild:string ='';
+    
+  ngOnInit(): void { 
     this.host.listRunTime().subscribe(runtime => {
       this.runtimes.push(...runtime);
     });              
@@ -49,6 +49,7 @@ export class CreateComponent implements OnInit,OnChanges {
 
   onSubmit(){
     if(!this.data){
+      if(this.CheckFild == 'forward')  this.codeEditor?.setValue(`${this.CreateForm.value.forward}`);
       this.host.displayspinner.next(true);
       const newApp:HostedApplication = HostedApplication.from({
         name:this.CreateForm.value.appname,
@@ -67,6 +68,7 @@ export class CreateComponent implements OnInit,OnChanges {
         this.host.displayspinner.next(false);
       },
       (err:HttpErrorResponse) => {
+        this.host.displayspinner.next(false);
         if(err.status === 409){
           alert("We are sorry there is a conflict, choose another name for the application");
           this.host.Recode =this.codeEditor?.getValue()
@@ -74,6 +76,7 @@ export class CreateComponent implements OnInit,OnChanges {
         }})    
       }
       else{
+        if(this.CheckFild == 'forward')  this.codeEditor?.setValue(`${this.CreateForm.value.forward}`);
         this.host.displayspinner.next(true);
         const newBlock = HostedApplicationBlock.fromBlock({
           name:this.CreateForm.value.blockname,
@@ -119,7 +122,7 @@ export class CreateComponent implements OnInit,OnChanges {
   private getEditorOptions(): Partial<ace.Ace.EditorOptions> & { enableBasicAutocompletion?: boolean; } {
     const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
         highlightActiveLine: true,
-        minLines: 15,
+        minLines: 11,
         maxLines: Infinity,
         fontSize:15};
     const extraEditorOptions = {
@@ -136,7 +139,7 @@ public beautifyContent() {
   };}
 
   public configerEditor(){
-    ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
+    ace.config.set('basePath', '');
     ace.require('ace/ext/language_tools');
     const element = this.codeEditorElmRef?.nativeElement;
     const editorOptions = this.getEditorOptions();
@@ -151,17 +154,44 @@ public beautifyContent() {
   getRuntime(runtime:string){
     switch(runtime) { 
       case 'javascript': { 
-        this.codeEditor?.getSession().setMode(`ace/mode/javascript`) 
+        this.CheckFild = "";
+        this.codeEditor?.setReadOnly(false);
+        this.codeEditor?.getSession().setMode(`ace/mode/javascript`);
+        this.codeEditor?.setValue('');
+        this.codeEditor?.insert("/*function preamble() { return '<?xml version='1.0'?>'; }\nfunction response(content) { return `<Response>${content}</Response>`; }\nfunction dial(content) { return `<Dial>${content}</Dial>`; }\nfunction queue(name, url) { return '<Queue ' + (url?`url='${url}'`:'') + `>${name}</Queue>`; }\nfunction getQueueName(event) { return 'sales'; }\nexports.handler = function(ev, ctx, callback) {\ntry {\ncallback(null, preamble() + response(dial(queue(getQueueName(ev), 'queue-announce'))));}\n catch (err) {callback(err);}};*/");
+ 
          break; 
       } 
       case 'ruby': { 
-        this.codeEditor?.getSession().setMode(`ace/mode/ruby`) 
+        this.CheckFild = "";
+        this.codeEditor?.setReadOnly(false);
+        this.codeEditor?.getSession().setMode(`ace/mode/ruby`); 
+        this.codeEditor?.setValue('');
+        this.codeEditor?.insert("=begin \ndef handler(ev, ctx)\n'<?xml version=\'1.0\'?>\n<Response>\n<Say>\nYou are about to be connected to a sales representative,please hold on the line\n</Say>\n</Response>'\nend\n=end")
          break; 
       } 
-      default: { 
-        this.codeEditor?.getSession().setMode(`ace/mode/xml`)  
+      case 'static': { 
+        this.CheckFild = "";
+        this.codeEditor?.setReadOnly(false);
+        this.codeEditor?.getSession().setMode(`ace/mode/xml`);
+        this.codeEditor?.setValue('');
+        this.codeEditor?.insert("<!--\n<?xml version='1.0'?>\n<Response>\n<Gather action='main-routing' input='dtmf' numDigits='1'>\n<Say>Welcome to Famous Company Ltd. For sales press 1, for customer support press 2, and for billing press 3.</Say>\n</Gather>\n</Response>\n-->")  
          break; 
       } 
+      case 'forward':{
+        this.codeEditor?.getSession().setMode(''); 
+        this.codeEditor?.setValue("Fill the input below")
+        this.codeEditor?.setReadOnly(true);
+        this.CheckFild = 'forward';
+        break;
+      }
+      default:{
+        this.CheckFild = "";
+        this.codeEditor?.setReadOnly(false);
+        this.codeEditor?.setValue('');
+        this.codeEditor?.insert("1: sales-queue\n2: support-menu\n3: dial-billing");
+        break;
+      }
    } 
   }
     

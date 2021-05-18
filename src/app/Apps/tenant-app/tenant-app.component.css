@@ -7,3 +7,10 @@ mat-icon{
 .tab{
     background-color: red;
 }
+
+
+.code{
+    overflow: auto;
+    height: 9em;
+   
+}
