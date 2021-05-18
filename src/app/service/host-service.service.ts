@@ -4,6 +4,8 @@ import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { Observable, Subject, throwError } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 export class HostedApplicationBlock {
@@ -64,6 +66,7 @@ export class HostServiceService {
   public ListAppChange = new Subject<HostedApplication[]>();
   private ListApp:HostedApplication[] = [];
   displayspinner = new Subject<boolean>();
+<<<<<<< HEAD
 
   public afuConfig = {
     uploadAPI: {
@@ -72,6 +75,11 @@ export class HostServiceService {
 };
 
   constructor(private httper:HttpClient,private config:ConfigService) { 
+=======
+  
+  constructor(private httper:HttpClient,private config:ConfigService,private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer) { 
+>>>>>>> dbe491234f5dbdb71ba46cfbca236525c9c8a681
      this.urlBase = config.config.api;
      this.token = config.config.token;
   }
@@ -200,6 +208,37 @@ export class HostServiceService {
      this.ListAppChange.next(this.ListApp.slice());
      return;
    }));
+  }
+
+  getfile(datalink:any){
+    return this.httper.get<string>(datalink,{
+      headers:new HttpHeaders({'content-type': 'application/json'})
+
+    })
+  }
+
+  createIcons(){
+    this.matIconRegistry.addSvgIcon(
+      "javascript",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/javascript_icon.svg")
+    );
+
+    this.matIconRegistry.addSvgIcon(
+      "ruby",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/ruby_PNG28.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "static",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/xml.icon.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "forward",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/forward_icon.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "select",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/select_icon.svg")
+    );
   }
   
 	}

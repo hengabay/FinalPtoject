@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -24,6 +24,10 @@
     "@angular/router": "~11.0.4",
     "ace-builds": "^1.4.12",
     "angular-file-uploader": "^7.0.3",
+<<<<<<< HEAD
+=======
+    "angular-material-fileupload": "^3.0.2",
+>>>>>>> dbe491234f5dbdb71ba46cfbca236525c9c8a681
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

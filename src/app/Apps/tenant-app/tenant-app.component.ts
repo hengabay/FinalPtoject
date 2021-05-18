@@ -33,12 +33,10 @@ export class TenantAppComponent implements OnInit {
   private editorBeautify:any;
 
   constructor(private host:HostServiceService,
-              public dialog: MatDialog,
-              private matIconRegistry: MatIconRegistry,
-              private domSanitizer: DomSanitizer,
+              public dialog: MatDialog,             
               private router:Router,
               private rout:ActivatedRoute) { 
-    this.createIcons();
+    this.host.createIcons();
   }
 
   ngOnInit(): void {
@@ -76,29 +74,7 @@ export class TenantAppComponent implements OnInit {
     this.router.navigate([`/editor/${nApp}/${nBlock}`],{relativeTo:this.rout})
   }
   
-  createIcons(){
-    this.matIconRegistry.addSvgIcon(
-      "javascript",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/javascript_icon.svg")
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      "ruby",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/ruby_PNG28.svg")
-    );
-    this.matIconRegistry.addSvgIcon(
-      "static",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/xml.icon.svg")
-    );
-    this.matIconRegistry.addSvgIcon(
-      "forward",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/forward_icon.svg")
-    );
-    this.matIconRegistry.addSvgIcon(
-      "select",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/img/select_icon.svg")
-    );
-  }
+  
 
   editor(){
     ace.config.set('basePath', '');

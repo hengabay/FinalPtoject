@@ -9,6 +9,10 @@
     display: flex;
     justify-content:space-around;
   }
+  .files{
+    color: rgb(79, 79, 187);
+  }
+  
   
   
   

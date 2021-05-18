@@ -49,8 +49,15 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button  mat-dialog-close [disabled]="!((CreateForm.controls.appname.valid || CreateForm.controls.blockname.valid) && CreateForm.controls.runtime.valid)" type="submit" mat-button color="primary">Create</button>
+<<<<<<< HEAD
     <button  mat-dialog-close  type="button" mat-button color="primary">Cancel</button> 
   </mat-dialog-actions>
+=======
+    <button  mat-dialog-close  type="button" mat-button color="primary">Cancel</button>
+    <input class="files" (change)="uploadFile($event)" type="file"/>    
+    </mat-dialog-actions>
+    
+>>>>>>> dbe491234f5dbdb71ba46cfbca236525c9c8a681
   
 </form>
 
