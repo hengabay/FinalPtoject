@@ -38,14 +38,10 @@ export class CreateComponent implements OnInit {
   @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
     private codeEditor?: ace.Ace.Editor;
     private editorBeautify:any;
-<<<<<<< HEAD
-    public CheckFild:string ='';
-    
-=======
+    public CheckFild:string = '';
     ngOnChanges(){
       console.log('hello');
     }
->>>>>>> dbe491234f5dbdb71ba46cfbca236525c9c8a681
   ngOnInit(): void { 
     this.host.listRunTime().subscribe(runtime => {
       this.runtimes.push(...runtime);

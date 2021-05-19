@@ -66,20 +66,9 @@ export class HostServiceService {
   public ListAppChange = new Subject<HostedApplication[]>();
   private ListApp:HostedApplication[] = [];
   displayspinner = new Subject<boolean>();
-<<<<<<< HEAD
-
-  public afuConfig = {
-    uploadAPI: {
-      url:"https://example-file-upload-api"
-    }
-};
-
-  constructor(private httper:HttpClient,private config:ConfigService) { 
-=======
   
   constructor(private httper:HttpClient,private config:ConfigService,private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer) { 
->>>>>>> dbe491234f5dbdb71ba46cfbca236525c9c8a681
      this.urlBase = config.config.api;
      this.token = config.config.token;
   }
