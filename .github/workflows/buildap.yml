@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 12.x
       - uses: bahmutov/npm-install@v1.6.0
-      - name: create appcinfig.json
+      - name: create appconfig.json
         env:
           TOKEN_APPRUPPIN: ${{ secrets.TOKEN }}
         run: |
