@@ -13,7 +13,6 @@ import { DeleteComponent } from './delete/delete/delete.component';
 import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
 import { EditorComponent } from './editor/editor/editor.component';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
-import { MatFileUploadModule } from 'angular-material-fileupload';
 
 @NgModule({
   declarations: [
@@ -36,7 +35,7 @@ import { MatFileUploadModule } from 'angular-material-fileupload';
     ReactiveFormsModule,
     AngularFileUploaderModule,
     
-    MatFileUploadModule
+    
   ],
   providers: [
     ConfigService,

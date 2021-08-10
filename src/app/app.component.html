@@ -1,7 +1,6 @@
 <mat-card class="card">
 	<div class="stickyHeader">
-	<mat-card-header class="header">
-		
+	<mat-card-header class="header">		
 		  <div class="logo-box">
 			<img src="../assets/img/cloudonix.png" alt="cloudonix img" class="logo">
 		  </div>
@@ -16,15 +15,17 @@
 			  <mat-icon>add</mat-icon>
 			</button>
 		  </div>
-		
-		
+		<div class="Search">
+			<mat-form-field>
+				<mat-label style="color: aliceblue;">Search Application</mat-label>
+				<input  (keyup)="SearchApp()" autocomplete="off" matInput type="text" [(ngModel)]="Search">
+				<button *ngIf="!Search" matSuffix mat-icon-button aria-label="Search" (click)="Search=''">
+					<mat-icon>search</mat-icon>
+				  </button>
+			  </mat-form-field>
+		</div>		
 	</mat-card-header>
-	</div>
-	
-			  
-		<router-outlet ></router-outlet>
-
-	
-	
+	</div>	
+	<router-outlet></router-outlet>
   </mat-card>
   

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeleteComponent } from 'src/app/delete/delete/delete.component';
 import { HostedApplication, HostServiceService } from 'src/app/service/host-service.service';
@@ -15,7 +15,7 @@ import 'ace-builds/src-noconflict/ext-beautify';
 import { CreateComponent } from 'src/app/create/create/create.component';
 
 
-const THEME = 'ace/theme/github'; 
+const THEME = 'ace/theme/twilight'; 
 const LANG = 'ace/mode/javascript';
 
 @Component({
@@ -24,8 +24,8 @@ const LANG = 'ace/mode/javascript';
   styleUrls: ['./tenant-app.component.css']
 })
 export class TenantAppComponent implements OnInit {
-  @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
-
+ 
+  @ViewChild('codeEditor',{static:false}) codeEditorElmRef?: ElementRef;
   
   public Apps:HostedApplication[] = [];
   displaySppiner:boolean = false;
@@ -46,11 +46,21 @@ export class TenantAppComponent implements OnInit {
     this.displaySppiner =turn;
     });
     this.host.ListAppChange.subscribe((ap:HostedApplication[]) =>{
-      this.Apps = ap;
+      this.Apps = ap; 
     })
     this.getListHost();
+
+setTimeout(()=> {
+  for (let index = 0; index < this.Apps.length; index++) {
+    ace.edit(document.getElementById(`editor_${index}`)!);      
+   }
+     //// ace.edit('editor_0');
+     // ace.edit('editor_1');
+
+    } , 1000);
   }
 
+  
   getListHost(tenantid?:string|number){
       this.host.list(tenantid).subscribe(hl =>{
         this.Apps = this.host.getListApp();
@@ -82,9 +92,6 @@ export class TenantAppComponent implements OnInit {
     const editorOptions = this.getEditorOptions();
 
     const element = this.codeEditorElmRef?.nativeElement;
-    this.codeEditor = ace.edit(element, editorOptions);
-
-    
     this.codeEditor = ace.edit(element, editorOptions);
     this.codeEditor.setTheme(THEME);
     this.codeEditor.getSession().setMode(LANG);

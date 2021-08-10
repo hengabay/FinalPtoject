@@ -1,8 +1,5 @@
-import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { ConfigService } from './service/config.service';
-import { HostedApplication, HostServiceService } from './service/host-service.service';
-import {PageEvent} from '@angular/material/paginator';
+import {  Component, OnInit } from '@angular/core';
+import {  HostServiceService } from './service/host-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateComponent } from './create/create/create.component';
 import { Router } from '@angular/router';
@@ -15,6 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit  {
+  Search:string = '';
   nametanent:string = '';
   constructor(private service:HostServiceService,public dialog: MatDialog,private router:Router ){
     
@@ -26,6 +24,7 @@ export class AppComponent implements OnInit  {
       console.log(tenant)
       this.nametanent = tenant.name;
     });
+    
 
     
   }
@@ -34,7 +33,9 @@ export class AppComponent implements OnInit  {
     this.dialog.open(CreateComponent);  
   }
 
-  
+  SearchApp(){
+    this.service.FilterApp(this.Search);
+  }
 
   
   }

@@ -1,5 +1,5 @@
 <form [formGroup]="CreateForm" (ngSubmit)="onSubmit()" >
-  <mat-dialog-content >
+  <mat-dialog-content class="dialog" >
     <mat-card-title style="margin-bottom: 10px;" align=center>Create {{data ? 'Block' : 'Application'}}</mat-card-title>
     <mat-card-subtitle *ngIf="!data" style="margin-top: 20px;" align=center>You will create application with default block colled <code>Main</code></mat-card-subtitle>
     <div class="container">
@@ -36,9 +36,9 @@
             </mat-form-field>
         </p> 
       </div>
-    </div>     
-          <mat-label>Write your code</mat-label>
-          <div class="code-editor" #codeEditor></div>     
+    </div>
+                   
+          <div  class="code-editor" #codeEditor></div>     
         <div style="margin-top: 3em;" *ngIf="CheckFild == 'forward'">
           <mat-form-field style="width: 100%;">
             <mat-label> Fill in the correct link </mat-label>

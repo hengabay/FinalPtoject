@@ -16,7 +16,7 @@ export interface AppConfig {
 
 export class ConfigService {
   private configData:AppConfig|undefined;
-  private readonly configURL: string = 'appconfig.json';
+  private readonly configURL: string = '/appconfig.json';
   constructor(private http:HttpClient) { }
 
   get factory(): () => Promise<any> {
@@ -43,9 +43,5 @@ export class ConfigService {
 
   
 }
-
-
-
-
 
 

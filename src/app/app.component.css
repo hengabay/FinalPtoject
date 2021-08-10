@@ -1,10 +1,9 @@
-.stickyHeader{
-    position: -webkit-sticky;
-    position: sticky;
-    z-index: 3;
-    top: 1rem;
-    left:1rem;
-    height:20vh;
 
+@media(width:500px){
+    .Search{
+        width: 30%;
+    }
 }
+
+
 

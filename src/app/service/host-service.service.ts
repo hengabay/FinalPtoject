@@ -1,9 +1,8 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import {  Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { Observable, Subject, throwError } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -74,6 +73,15 @@ export class HostServiceService {
   }
   getListApp(){
     return this.ListApp.slice();
+  }
+
+  FilterApp(name:string){
+    var copy:HostedApplication[] ;
+    copy = this.ListApp.filter((app:HostedApplication) => {    
+      if(app.name.toLowerCase().search(name.toLowerCase()) != -1)  return true;
+    return false;            
+   })
+   this.ListAppChange.next(copy.slice());
   }
   
 

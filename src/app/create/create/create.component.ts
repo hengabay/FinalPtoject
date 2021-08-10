@@ -11,14 +11,13 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-beautify';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CompileShallowModuleMetadata } from '@angular/compiler';
-import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
-})
+})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 export class CreateComponent implements OnInit {
     selectedRuntime:string = '';
     Recode:string|undefined;
@@ -33,20 +32,18 @@ export class CreateComponent implements OnInit {
     });
   constructor(private host:HostServiceService,
               private router:Router, 
-              private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:{name:string}) {             
-              }
+              private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:{name:string}) {}
+
   @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
+   
     private codeEditor?: ace.Ace.Editor;
     private editorBeautify:any;
     public CheckFild:string = '';
-    ngOnChanges(){
-      console.log('hello');
-    }
+
   ngOnInit(): void { 
     this.host.listRunTime().subscribe(runtime => {
       this.runtimes.push(...runtime);
-    });              
-      
+    });                  
     this.configerEditor();
   }
 
@@ -161,7 +158,7 @@ public beautifyContent() {
         this.codeEditor?.setReadOnly(false);
         this.codeEditor?.getSession().setMode(`ace/mode/javascript`);
         this.codeEditor?.setValue('');
-        this.codeEditor?.insert("/*function preamble() { return '<?xml version='1.0'?>'; }\nfunction response(content) { return `<Response>${content}</Response>`; }\nfunction dial(content) { return `<Dial>${content}</Dial>`; }\nfunction queue(name, url) { return '<Queue ' + (url?`url='${url}'`:'') + `>${name}</Queue>`; }\nfunction getQueueName(event) { return 'sales'; }\nexports.handler = function(ev, ctx, callback) {\ntry {\ncallback(null, preamble() + response(dial(queue(getQueueName(ev), 'queue-announce'))));}\n catch (err) {callback(err);}};*/");
+        this.codeEditor?.insert("function preamble() { return '<?xml version='1.0'?>'; }\nfunction response(content) { return `<Response>${content}</Response>`; }\nfunction dial(content) { return `<Dial>${content}</Dial>`; }\nfunction queue(name, url) { return '<Queue ' + (url?`url='${url}'`:'') + `>${name}</Queue>`; }\nfunction getQueueName(event) { return 'sales'; }\nexports.handler = function(ev, ctx, callback) {\ntry {\ncallback(null, preamble() + response(dial(queue(getQueueName(ev), 'queue-announce'))));}\n catch (err) {callback(err);}};");
  
          break; 
       } 
@@ -170,7 +167,7 @@ public beautifyContent() {
         this.codeEditor?.setReadOnly(false);
         this.codeEditor?.getSession().setMode(`ace/mode/ruby`); 
         this.codeEditor?.setValue('');
-        this.codeEditor?.insert("=begin \ndef handler(ev, ctx)\n'<?xml version=\'1.0\'?>\n<Response>\n<Say>\nYou are about to be connected to a sales representative,please hold on the line\n</Say>\n</Response>'\nend\n=end")
+        this.codeEditor?.insert("\ndef handler(ev, ctx)\n'<?xml version=\'1.0\'?>\n<Response>\n<Say>\nYou are about to be connected to a sales representative,please hold on the line\n</Say>\n</Response>'\nend\n")
          break; 
       } 
       case 'static': { 
@@ -178,7 +175,7 @@ public beautifyContent() {
         this.codeEditor?.setReadOnly(false);
         this.codeEditor?.getSession().setMode(`ace/mode/xml`);
         this.codeEditor?.setValue('');
-        this.codeEditor?.insert("<!--\n<?xml version='1.0'?>\n<Response>\n<Gather action='main-routing' input='dtmf' numDigits='1'>\n<Say>Welcome to Famous Company Ltd. For sales press 1, for customer support press 2, and for billing press 3.</Say>\n</Gather>\n</Response>\n-->")  
+        this.codeEditor?.insert("\n<?xml version='1.0'?>\n<Response>\n<Gather action='main-routing' input='dtmf' numDigits='1'>\n<Say>Welcome to Famous Company Ltd. For sales press 1, for customer support press 2, and for billing press 3.</Say>\n</Gather>\n</Response>\n")  
          break; 
       } 
       case 'forward':{
