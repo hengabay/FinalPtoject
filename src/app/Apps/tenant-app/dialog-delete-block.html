@@ -1,7 +1,4 @@
-
-
 <h2 mat-dialog-title>Really delete block <code>{{data.block}}?</code></h2>
-
 <mat-dialog-content>
 	<p>
 		Are you sure you want to delete the block
@@ -10,14 +7,11 @@
 	</p>
 	<p>
 		This operation <strong>cannot</strong> be undone.
-	</p>
-	
+	</p>	
 </mat-dialog-content>
-
 <mat-dialog-actions>
 	<button mat-raised-button #cancelDelete mat-dialog-close="false" cdkFocusInitial
 		(keydown.arrowRight)="confirmDelete.focus()">Cancel</button>
 	<button  mat-raised-button #confirmDelete mat-dialog-close="false" (click)="Deleteblock()"
 		(keydown.arrowLeft)="cancelDelete.focus()">Delete</button>
 </mat-dialog-actions>
-

@@ -1,14 +1,18 @@
 
-  .code-editor{
+  .code-editor {
     width: 100%;
     overflow: auto;
 
   }
-  .container{
+  .dialog {
+    overflow: auto;
+    max-height: 300px;
+  }
+  .container {
     display: flex;
     justify-content:space-around;
   }
-  .files{
+  .files {
     color: rgb(79, 79, 187);
   }
   

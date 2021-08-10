@@ -1,26 +1,19 @@
 <div *ngIf="displaySppiner===true" class="spinner">
   <mat-spinner></mat-spinner>
   </div>
-<div  *ngFor="let App of Apps;let i = index">
+<div *ngFor="let App of Apps;let i = index">
     <mat-card  class="applications">        
         <mat-card-title align="center" ><em>{{App.name}}</em></mat-card-title>
-        <mat-card-content  class="card-content">
-            <mat-tab-group #tapRef dynamicHeight="true">
-              <div   *ngFor="let block of App.blocks;let j = index">
-                <div >
-                <mat-tab>
-                  <ng-template  mat-tab-label>
+            <mat-tab-group class="card-content" animationDuration="0ms" #tapRef >
+                <mat-tab *ngFor="let block of App.blocks;let j = index">
+                  <ng-template  class="stackTop" mat-tab-label>
                     <mat-icon matTooltipPosition="above" matTooltip="Runtime {{block.runtime}}" svgIcon = {{block.runtime}}></mat-icon>
                       | {{block.name}}  <mat-icon class="icon"  matTooltipPosition="above" matTooltip="Delete block" (click)="icon(App.name,block.name)">delete</mat-icon>
-                  </ng-template>          
-                   <h3><button matTooltip="Edit your code" (click)="info(App.name,block.name)" mat-button><mat-icon>code</mat-icon></button></h3>
-                   <div class="code-editor" id="editor_{{i}}" #codeEditor >{{block.code}}</div>
-
+                  </ng-template>                        
+                   <h3><button matTooltip="Edit your code" (click)="editblock(block,App.name)" mat-button><mat-icon>code</mat-icon></button></h3>
+                   <app-editor *ngIf="true"  [item]="{block:block,readOnly:true}"></app-editor>
                 </mat-tab>
-              </div>
-              </div>
             </mat-tab-group>            
-        </mat-card-content>
         <mat-card-actions>
             <button  matTooltip="Delete application" matTooltipPosition="above" (click)="delete(App.name)" mat-raised-button color="warn"><mat-icon>delete</mat-icon></button>
             <button  matTooltip="Create block" matTooltipPosition="above" (click)="addBlock(App.name)" mat-button aria-label="add block">
@@ -28,6 +21,4 @@
             </button> 
         </mat-card-actions>       
       </mat-card>  
-
 </div>
-

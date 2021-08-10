@@ -1,24 +1,32 @@
-mat-icon{
+mat-icon {
     margin: 5px;
 }
-.icon{
+.icon {
     margin-left: 20px;
 }
-.tab{
+.tab {
     background-color: red;
 }
 
-.applications{
+.applications {
     margin:3rem;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 15px 50px 30px 5px;
 }
-.code{
+.code {
     overflow: auto;
-    height: 9em;
-   
+    height: 9em; 
 }
-.code-editor{
-    min-height:100px;
+
+.card-content {
+    max-height: 400px;
+    overflow-y: auto;
 }
+.stackTop {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 3;
+}
+
+
 

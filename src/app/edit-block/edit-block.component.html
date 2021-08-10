@@ -1,0 +1,8 @@
+<h2>Edit your block named {{data.block.name}}</h2>
+<mat-dialog-content style="max-height: 300px;">
+  <app-editor #editor [item]="{block:data.block,readOnly:false}"></app-editor>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" (click)="update()">Update</button>
+  <button mat-button mat-dialog-close >Cancel</button>
+</mat-dialog-actions>

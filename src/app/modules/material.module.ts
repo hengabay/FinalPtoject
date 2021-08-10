@@ -17,10 +17,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
-
-
-
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 const MaterialComponent = [
   MatButtonModule
@@ -41,9 +38,8 @@ const MaterialComponent = [
   ,MatDividerModule
   ,MatTabsModule
   ,MatTooltipModule
+  ,ScrollingModule
 ];
-
-
 @NgModule({
   imports: [MaterialComponent],
   exports:[MaterialComponent]

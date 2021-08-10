@@ -1,10 +1,8 @@
 <form [formGroup]="CreateForm" (ngSubmit)="onSubmit()" >
-  <mat-dialog-content class="dialog" >
     <mat-card-title style="margin-bottom: 10px;" align=center>Create {{data ? 'Block' : 'Application'}}</mat-card-title>
     <mat-card-subtitle *ngIf="!data" style="margin-top: 20px;" align=center>You will create application with default block colled <code>Main</code></mat-card-subtitle>
     <div class="container">
       <div class="box-1">
-
       <p *ngIf="!data">
           <mat-form-field appearance="outline" >
             <mat-label>Application name</mat-label>
@@ -36,25 +34,19 @@
             </mat-form-field>
         </p> 
       </div>
-    </div>
-                   
-          <div  class="code-editor" #codeEditor></div>     
+    </div>                   
         <div style="margin-top: 3em;" *ngIf="CheckFild == 'forward'">
           <mat-form-field style="width: 100%;">
             <mat-label> Fill in the correct link </mat-label>
             <input autocomplete="off" formControlName="forward" matInput placeholder="https://example.com/application/support-menu" >
           </mat-form-field>
         </div>
-
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button  mat-dialog-close [disabled]="!((CreateForm.controls.appname.valid || CreateForm.controls.blockname.valid) && CreateForm.controls.runtime.valid)" type="submit" mat-button color="primary">Create</button>
-    <button  mat-dialog-close  type="button" mat-button color="primary">Cancel</button>
-    <input class="files" (change)="uploadFile($event)" type="file"/>    
-    </mat-dialog-actions>
-    
-  
+  <mat-dialog-content class="dialog" >
+    <div  class="code-editor" #codeEditor></div>  
+  </mat-dialog-content>   
+    <mat-dialog-actions>
+      <button  mat-dialog-close [disabled]="!((CreateForm.controls.appname.valid || CreateForm.controls.blockname.valid) && CreateForm.controls.runtime.valid)" type="submit" mat-button color="primary">Create</button>
+      <button  mat-dialog-close  type="button" mat-button color="primary">Cancel</button>
+      <input class="files" (change)="uploadFile($event)" type="file"/>    
+      </mat-dialog-actions> 
 </form>
-
-
-

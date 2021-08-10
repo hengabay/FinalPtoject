@@ -1,5 +1,5 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnInit, SimpleChange, ViewChild } from '@angular/core';
+import {  HttpErrorResponse } from '@angular/common/http';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl,FormGroup,Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HostedApplication, HostedApplicationBlock, HostServiceService } from 'src/app/service/host-service.service';
@@ -11,8 +11,6 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-beautify';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -34,8 +32,7 @@ export class CreateComponent implements OnInit {
               private router:Router, 
               private dialog:MatDialog,@Inject(MAT_DIALOG_DATA) public data:{name:string}) {}
 
-  @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
-   
+    @ViewChild('codeEditor',{static:true}) codeEditorElmRef?: ElementRef;
     private codeEditor?: ace.Ace.Editor;
     private editorBeautify:any;
     public CheckFild:string = '';
@@ -53,7 +50,7 @@ export class CreateComponent implements OnInit {
       this.host.displayspinner.next(true);
       const newApp:HostedApplication = HostedApplication.from({
         name:this.CreateForm.value.appname,
-        url:`cx://hosted-app/${this.CreateForm.value.appname}/${this.CreateForm.value.defaultBlock}`,
+        url:`cx://hosted-app/${this.CreateForm.value.appname}`,
         blocks:[{
           name:this.CreateForm.value.defaultBlock,
           runtime:this.CreateForm.value.runtime,
@@ -63,7 +60,6 @@ export class CreateComponent implements OnInit {
         }]
       });
       this.host.create(newApp).subscribe(data =>{
-        this.router.navigate(['/']);
         this.host.Recode ='';
         this.host.displayspinner.next(false);
       },
@@ -86,7 +82,6 @@ export class CreateComponent implements OnInit {
           url:`cx://hosted-app/${this.data.name}/${this.CreateForm.value.blockname}`
         });
         this.host.postBlock(this.data.name,newBlock).subscribe(data => {
-          console.log(data);
           this.host.displayspinner.next(false);
         },
         (err:HttpErrorResponse) => {
@@ -96,8 +91,7 @@ export class CreateComponent implements OnInit {
             this.host.Recode =this.codeEditor?.getValue()
             this.dialog.open(CreateComponent);  
           }})
-      }
-    
+        }
     }
 
   checkValidName(control:FormControl): {[s:string]:boolean}|null {
@@ -108,12 +102,12 @@ export class CreateComponent implements OnInit {
       }
       return null;
   }
-  checkValisNameBlock(control:FormControl): {[s:string]:boolean}|null{
-    let temp:HostedApplicationBlock[]|undefined =[];
-    if(this.data){
+  checkValisNameBlock(control: FormControl): {[s:string]: boolean} | null {
+    let temp:HostedApplicationBlock[]|undefined = [];
+    if(this.data) {
       temp = this.host.getListApp().find(name => name.name === this.data.name)?.blocks.filter(block => block.name === control.value);
     }
-      if(temp!.length>0){
+      if(temp!.length>0) {
         return {'nameExists':true}
       }
       return null;
@@ -138,7 +132,7 @@ public beautifyContent() {
      this.editorBeautify.beautify(session);
   };}
 
-  public configerEditor(){
+  public configerEditor() {
     ace.config.set('basePath', '');
     ace.require('ace/ext/language_tools');
     const element = this.codeEditorElmRef?.nativeElement;
@@ -178,14 +172,14 @@ public beautifyContent() {
         this.codeEditor?.insert("\n<?xml version='1.0'?>\n<Response>\n<Gather action='main-routing' input='dtmf' numDigits='1'>\n<Say>Welcome to Famous Company Ltd. For sales press 1, for customer support press 2, and for billing press 3.</Say>\n</Gather>\n</Response>\n")  
          break; 
       } 
-      case 'forward':{
+      case 'forward': {
         this.codeEditor?.getSession().setMode(''); 
         this.codeEditor?.setValue("Fill the input below")
         this.codeEditor?.setReadOnly(true);
         this.CheckFild = 'forward';
         break;
       }
-      default:{
+      default: {
         this.CheckFild = "";
         this.codeEditor?.setReadOnly(false);
         this.codeEditor?.setValue('');
@@ -194,17 +188,14 @@ public beautifyContent() {
       }
    } 
   }
-
-  uploadFile(file:any){
+  uploadFile(file:any) {
     let files:File =file.target.files[0];
     let type:string = files.type;
-    console.log(files.type.search("text"))
     if(type.search("text") !== -1){
       getBase64(files).then(
         (data:any) => this.host.getfile(data).subscribe(data =>{},
         (err:HttpErrorResponse) =>    this.codeEditor?.insert(`${err.error.text}`)));    
-    }
-    else{
+    } else {
       alert("Please choose text file")
     }
    
@@ -217,10 +208,4 @@ public beautifyContent() {
       });
     }
   }
-    
-  
-
-  
-  
-  
 }

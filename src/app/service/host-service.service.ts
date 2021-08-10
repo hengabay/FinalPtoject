@@ -5,8 +5,6 @@ import { ConfigService } from './config.service';
 import { Observable, Subject, throwError } from 'rxjs';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-
-
 export class HostedApplicationBlock {
 	constructor(
     public name:string,
@@ -14,7 +12,6 @@ export class HostedApplicationBlock {
     public code:string,
     public application:string,
     public url:string
-
       ) {}
 
       public static fromBlock(hostblock:Partial<HostedApplicationBlock>):HostedApplicationBlock {
@@ -30,12 +27,10 @@ export class HostedApplication {
 		public url: string,
 		public blocks:HostedApplicationBlock[]
 	) {}
-
   public static from(hostapp:Partial<HostedApplication>):HostedApplication {
 		return new HostedApplication(hostapp.id!, hostapp.tenantId!, hostapp.name!, hostapp.url!, hostapp.blocks!);
 	}
 }
-
 export class Tenant {
 	constructor(
 		public id: number,
@@ -45,7 +40,6 @@ export class Tenant {
 		public createdAt?:Date,
 		public lastActivity?:Date,
 	) {}
-
 	public static from(tenant:Partial<Tenant>):Tenant {
 		return new Tenant(tenant.id!, tenant.name!, tenant.profile!, tenant.active!);
 	}
@@ -65,7 +59,8 @@ export class HostServiceService {
   public ListAppChange = new Subject<HostedApplication[]>();
   private ListApp:HostedApplication[] = [];
   displayspinner = new Subject<boolean>();
-  
+  public editorChange = new Subject<string>();
+ 
   constructor(private httper:HttpClient,private config:ConfigService,private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer) { 
      this.urlBase = config.config.api;
@@ -84,7 +79,6 @@ export class HostServiceService {
    this.ListAppChange.next(copy.slice());
   }
   
-
   list(tenantId?:number|string): Observable<HostedApplication[]> {
 		const url = !!tenantId ? `${this.urlBase}/tenants/${tenantId}/hosted-applications` : `${this.urlBase}/hosted-applications`;
   	return this.httper.get<HostedApplication[]>(url,
@@ -102,21 +96,20 @@ export class HostServiceService {
       }),
       catchError((err:HttpErrorResponse) => {
         return throwError(`Error loading configuration from ${err.url} (${err.status}): ${err.error}`);
-      }));
-        
+      }));      
   }
   
   listblock(name:string):Observable<HostedApplication>{
-    const url = `${this.urlBase}/hosted-applications/${name}`;
-    return this.httper.get<HostedApplication>(url,
-      {
-        headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
-      }
-      ).pipe(map(res => {
-       return HostedApplication.from(res)}),
-       catchError((err:HttpErrorResponse) => {
-        return throwError(`Error loading configuration from ${err.url} (${err.status}): ${err.error}`);
-       }));
+  const url = `${this.urlBase}/hosted-applications/${name}`;
+  return this.httper.get<HostedApplication>(url,
+    {
+      headers: new HttpHeaders({Authorization: `Bearer ${this.token}`})
+    }
+    ).pipe(map(res => {
+      return HostedApplication.from(res)}),
+      catchError((err:HttpErrorResponse) => {
+      return throwError(`Error loading configuration from ${err.url} (${err.status}): ${err.error}`);
+      }));
   }
 
   create(newApp:HostedApplication):Observable<HostedApplication>{
@@ -125,12 +118,12 @@ export class HostServiceService {
     {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).pipe(map( (data:HostedApplication) => {
+      console.log(data);
       this.ListApp.push(data);
       this.ListApp.sort((a:HostedApplication,b:HostedApplication) => +b.id - +a.id);
       this.ListAppChange.next(this.ListApp.slice());
       return data;
-    }))
-      
+    }))   
    }
 
    Delete(nameDeleted:string){
@@ -143,7 +136,6 @@ export class HostServiceService {
       this.ListApp = temp;
       this.ListAppChange.next(this.ListApp.slice());
       this.displayspinner.next(false);
-
     });
    }
 
@@ -159,7 +151,6 @@ export class HostServiceService {
      {
       headers:new HttpHeaders({Authorization: `Bearer ${this.token}`})
     }).pipe(map(res => {
-      console.log(res);
       this.ListApp.find(a => a.name === nameApp)?.blocks.push(block);
       this.ListAppChange.next(this.ListApp.slice());
     }));
@@ -185,10 +176,12 @@ export class HostServiceService {
          })
        }
      });
-     console.log(this.ListApp);
      this.ListAppChange.next(this.ListApp.slice());
-     console.log(this.getListApp);
-   }));
+   })).subscribe(()=>{
+     this.list().subscribe(()=>{
+      this.displayspinner.next(false);
+     });
+   });
    }
 
    Deleteblock(nameApp:string,block:string){
@@ -203,14 +196,16 @@ export class HostServiceService {
     }
      this.ListApp.find(app => app.name === nameApp)!.blocks = temp;
      this.ListAppChange.next(this.ListApp.slice());
-     return;
-   }));
+   })).subscribe(
+    () => {
+      this.displayspinner.next(false);            
+    }
+  );
   }
 
   getfile(datalink:any){
     return this.httper.get<string>(datalink,{
       headers:new HttpHeaders({'content-type': 'application/json'})
-
     })
   }
 

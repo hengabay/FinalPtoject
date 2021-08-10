@@ -10,19 +10,18 @@ import { DialogDeleteBlock, TenantAppComponent } from './Apps/tenant-app/tenant-
 import { CreateComponent } from './create/create/create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DeleteComponent } from './delete/delete/delete.component';
-import { AddBlockComponent } from './AddBlock/add-block/add-block.component';
 import { EditorComponent } from './editor/editor/editor.component';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
-
+import { EditBlockComponent } from './edit-block/edit-block.component';
 @NgModule({
   declarations: [
     AppComponent,
     TenantAppComponent,
     CreateComponent,
     DeleteComponent,
-    AddBlockComponent,
     EditorComponent,
-    DialogDeleteBlock
+    DialogDeleteBlock,
+    EditBlockComponent
   ],
   entryComponents:[CreateComponent],
   imports: [
@@ -33,9 +32,7 @@ import { AngularFileUploaderModule } from 'angular-file-uploader';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFileUploaderModule,
-    
-    
+    AngularFileUploaderModule,  
   ],
   providers: [
     ConfigService,
